@@ -41,6 +41,10 @@ namespace QuickyFUR.Data.Models
         [Required]
         public string Materials { get; set; }
 
+        [Required]
+        public decimal Price { get; set; }
+
+        [Required]
         [StringLength(36)]
         public string CartId { get; set; }
         [ForeignKey(nameof(CartId))]

@@ -9,11 +9,11 @@ using QuickyFUR.Data;
 
 #nullable disable
 
-namespace QuickyFUR.Data.Migrations
+namespace QuickyFUR.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20220305191844_InitialMigration01")]
-    partial class InitialMigration01
+    [Migration("20220311024510_UserAndRole")]
+    partial class UserAndRole
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -226,19 +226,24 @@ namespace QuickyFUR.Data.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
-            modelBuilder.Entity("QuickyFUR.Data.Models.Buyer", b =>
+            modelBuilder.Entity("QuickyFUR.Data.Models.AppRole", b =>
                 {
                     b.Property<string>("Id")
                         .HasMaxLength(36)
                         .HasColumnType("nvarchar(36)");
 
-                    b.Property<string>("Address")
+                    b.Property<string>("Name")
                         .IsRequired()
-                        .HasMaxLength(150)
-                        .HasColumnType("nvarchar(150)");
+                        .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("CartId")
-                        .IsRequired()
+                    b.HasKey("Id");
+
+                    b.ToTable("AppRoles");
+                });
+
+            modelBuilder.Entity("QuickyFUR.Data.Models.AppUser", b =>
+                {
+                    b.Property<string>("Id")
                         .HasMaxLength(36)
                         .HasColumnType("nvarchar(36)");
 
@@ -248,18 +253,51 @@ namespace QuickyFUR.Data.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasMaxLength(747)
-                        .HasColumnType("nvarchar(747)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Password")
                         .IsRequired()
                         .HasMaxLength(64)
                         .HasColumnType("nvarchar(64)");
 
+                    b.Property<string>("RoleId")
+                        .IsRequired()
+                        .HasMaxLength(36)
+                        .HasColumnType("nvarchar(36)");
+
                     b.HasKey("Id");
 
+                    b.HasIndex("RoleId");
+
+                    b.ToTable("AppUsers");
+                });
+
+            modelBuilder.Entity("QuickyFUR.Data.Models.Buyer", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasMaxLength(36)
+                        .HasColumnType("nvarchar(36)");
+
+                    b.Property<string>("Address")
+                        .HasMaxLength(150)
+                        .HasColumnType("nvarchar(150)");
+
+                    b.Property<string>("AppUserId")
+                        .IsRequired()
+                        .HasMaxLength(36)
+                        .HasColumnType("nvarchar(36)");
+
+                    b.Property<string>("CartId")
+                        .HasMaxLength(36)
+                        .HasColumnType("nvarchar(36)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AppUserId");
+
                     b.HasIndex("CartId")
-                        .IsUnique();
+                        .IsUnique()
+                        .HasFilter("[CartId] IS NOT NULL");
 
                     b.ToTable("Buyers");
                 });
@@ -318,6 +356,9 @@ namespace QuickyFUR.Data.Migrations
                         .HasMaxLength(30)
                         .HasColumnType("nvarchar(30)");
 
+                    b.Property<decimal>("Price")
+                        .HasColumnType("decimal(18,2)");
+
                     b.HasKey("Id");
 
                     b.HasIndex("CartId");
@@ -338,31 +379,22 @@ namespace QuickyFUR.Data.Migrations
                     b.Property<int>("Age")
                         .HasColumnType("int");
 
-                    b.Property<string>("Autobiography")
+                    b.Property<string>("AppUserId")
                         .IsRequired()
+                        .HasMaxLength(36)
+                        .HasColumnType("nvarchar(36)");
+
+                    b.Property<string>("Autobiography")
                         .HasMaxLength(500)
                         .HasColumnType("nvarchar(500)");
 
                     b.Property<string>("Country")
-                        .IsRequired()
                         .HasMaxLength(56)
                         .HasColumnType("nvarchar(56)");
 
-                    b.Property<string>("Email")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Password")
-                        .IsRequired()
-                        .HasMaxLength(64)
-                        .HasColumnType("nvarchar(64)");
-
-                    b.Property<string>("Pseudonym")
-                        .IsRequired()
-                        .HasMaxLength(20)
-                        .HasColumnType("nvarchar(20)");
-
                     b.HasKey("Id");
+
+                    b.HasIndex("AppUserId");
 
                     b.ToTable("Designers");
                 });
@@ -479,13 +511,30 @@ namespace QuickyFUR.Data.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("QuickyFUR.Data.Models.Buyer", b =>
+            modelBuilder.Entity("QuickyFUR.Data.Models.AppUser", b =>
                 {
-                    b.HasOne("QuickyFUR.Data.Models.Cart", "Cart")
-                        .WithOne("Buyer")
-                        .HasForeignKey("QuickyFUR.Data.Models.Buyer", "CartId")
+                    b.HasOne("QuickyFUR.Data.Models.AppRole", "Role")
+                        .WithMany("AppUsers")
+                        .HasForeignKey("RoleId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("Role");
+                });
+
+            modelBuilder.Entity("QuickyFUR.Data.Models.Buyer", b =>
+                {
+                    b.HasOne("QuickyFUR.Data.Models.AppUser", "AppUser")
+                        .WithMany()
+                        .HasForeignKey("AppUserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("QuickyFUR.Data.Models.Cart", "Cart")
+                        .WithOne("Buyer")
+                        .HasForeignKey("QuickyFUR.Data.Models.Buyer", "CartId");
+
+                    b.Navigation("AppUser");
 
                     b.Navigation("Cart");
                 });
@@ -517,6 +566,17 @@ namespace QuickyFUR.Data.Migrations
                     b.Navigation("Field");
                 });
 
+            modelBuilder.Entity("QuickyFUR.Data.Models.Designer", b =>
+                {
+                    b.HasOne("QuickyFUR.Data.Models.AppUser", "AppUser")
+                        .WithMany()
+                        .HasForeignKey("AppUserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("AppUser");
+                });
+
             modelBuilder.Entity("QuickyFUR.Data.Models.Product", b =>
                 {
                     b.HasOne("QuickyFUR.Data.Models.Designer", "Designer")
@@ -534,6 +594,11 @@ namespace QuickyFUR.Data.Migrations
                     b.Navigation("Designer");
 
                     b.Navigation("Field");
+                });
+
+            modelBuilder.Entity("QuickyFUR.Data.Models.AppRole", b =>
+                {
+                    b.Navigation("AppUsers");
                 });
 
             modelBuilder.Entity("QuickyFUR.Data.Models.Cart", b =>

@@ -15,8 +15,10 @@ namespace QuickyFUR.Data.Models
                       ErrorMessage = ErrorMessages.stringLengthErrorMessage)]
         public string Name { get; set; }
 
-        public ICollection<Product> Products = new List<Product>();
+        public IList<Product> Products = new List<Product>();
 
-        public ICollection<Designer> Designers = new List<Designer>();
+        public IList<ConfiguratedProduct> ConfiguratedProducts = new List<ConfiguratedProduct>();
+
+        public IList<Designer> Designers = new List<Designer>();
     }
 }

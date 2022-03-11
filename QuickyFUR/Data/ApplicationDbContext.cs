@@ -20,8 +20,12 @@ namespace QuickyFUR.Data
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
+
+
         }
 
+        public DbSet<AppRole> AppRoles { get; set; }
+        public DbSet<AppUser> AppUsers { get; set; }
         public DbSet<Designer> Designers { get; set; }
         public DbSet<Buyer> Buyers { get; set; }
         public DbSet<Field> Fields { get; set; }

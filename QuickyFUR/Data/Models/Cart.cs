@@ -11,6 +11,6 @@ namespace QuickyFUR.Data.Models
 
         public Buyer Buyer { get; set; }
 
-        public ICollection<ConfiguratedProduct> Products { get; set; } = new List<ConfiguratedProduct>();
+        public IList<ConfiguratedProduct> Products { get; set; } = new List<ConfiguratedProduct>();
     }
 }
