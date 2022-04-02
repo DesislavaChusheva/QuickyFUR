@@ -8,7 +8,7 @@ namespace QuickyFUR.Infrastructure.Constraints
 {
     public class UserConstraints
     {
-        public const int NAME_MIN_LENGTH = 6;
+        public const int NAME_MIN_LENGTH = 2;
         public const int NAME_MAX_LENGTH = 747;
     }
 }

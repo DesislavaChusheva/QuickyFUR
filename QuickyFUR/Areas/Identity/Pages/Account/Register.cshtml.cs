@@ -18,6 +18,10 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Logging;
+using QuickyFUR.Infrastructure.Constraints;
+using QuickyFUR.Infrastructure.Data.Models.Identity;
+using QuickyFUR.Infrastructure.Messages;
+
 
 namespace QuickyFUR.Areas.Identity.Pages.Account
 {
@@ -29,13 +33,15 @@ namespace QuickyFUR.Areas.Identity.Pages.Account
         private readonly IUserEmailStore<IdentityUser> _emailStore;
         private readonly ILogger<RegisterModel> _logger;
         private readonly IEmailSender _emailSender;
+        private readonly RoleManager<IdentityRole> _roleManager;
 
         public RegisterModel(
             UserManager<IdentityUser> userManager,
             IUserStore<IdentityUser> userStore,
             SignInManager<IdentityUser> signInManager,
             ILogger<RegisterModel> logger,
-            IEmailSender emailSender)
+            IEmailSender emailSender,
+            RoleManager<IdentityRole> roleManager)
         {
             _userManager = userManager;
             _userStore = userStore;
@@ -43,6 +49,7 @@ namespace QuickyFUR.Areas.Identity.Pages.Account
             _signInManager = signInManager;
             _logger = logger;
             _emailSender = emailSender;
+            _roleManager = roleManager;
         }
 
         /// <summary>
@@ -70,10 +77,25 @@ namespace QuickyFUR.Areas.Identity.Pages.Account
         /// </summary>
         public class InputModel
         {
+            [Required]
+            [StringLength(UserConstraints.NAME_MAX_LENGTH,
+              MinimumLength = UserConstraints.NAME_MIN_LENGTH,
+              ErrorMessage = ErrorMessages.stringLengthErrorMessage)]
+            [Display(Name = "FirstName")]
+            public string FirstName { get; set; }
+
+            [Required]
+            [StringLength(UserConstraints.NAME_MAX_LENGTH,
+                  MinimumLength = UserConstraints.NAME_MIN_LENGTH,
+                  ErrorMessage = ErrorMessages.stringLengthErrorMessage)]
+            [Display(Name = "LastName")]
+            public string LastName { get; set; }
+            public string FullName => $"{FirstName} {LastName}";
             /// <summary>
             ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
             ///     directly from your code. This API may change or be removed in future releases.
             /// </summary>
+
             [Required]
             [EmailAddress]
             [Display(Name = "Email")]
@@ -97,6 +119,10 @@ namespace QuickyFUR.Areas.Identity.Pages.Account
             [Display(Name = "Confirm password")]
             [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
             public string ConfirmPassword { get; set; }
+
+            [BindProperty]
+            public string Role { get; set; }
+            //public string[] Roles = new[] { "Designer", "Customer" };
         }
 
 
@@ -116,10 +142,16 @@ namespace QuickyFUR.Areas.Identity.Pages.Account
 
                 await _userStore.SetUserNameAsync(user, Input.Email, CancellationToken.None);
                 await _emailStore.SetEmailAsync(user, Input.Email, CancellationToken.None);
+
                 var result = await _userManager.CreateAsync(user, Input.Password);
+
 
                 if (result.Succeeded)
                 {
+                    var role = Input.Role;
+                    await _userManager.AddToRoleAsync(user, role);
+                    
+
                     _logger.LogInformation("User created a new account with password.");
 
                     var userId = await _userManager.GetUserIdAsync(user);
@@ -136,7 +168,14 @@ namespace QuickyFUR.Areas.Identity.Pages.Account
 
                     if (_userManager.Options.SignIn.RequireConfirmedAccount)
                     {
-                        return RedirectToPage("RegisterConfirmation", new { email = Input.Email, returnUrl = returnUrl });
+                        if (role == "Designer")
+                        {
+                            return RedirectToPage("RegisterDesignerComplete");
+                        }
+                        else
+                        {
+                            return RedirectToPage("RegisterCustomerComplete");
+                        }
                     }
                     else
                     {
@@ -154,11 +193,14 @@ namespace QuickyFUR.Areas.Identity.Pages.Account
             return Page();
         }
 
-        private IdentityUser CreateUser()
+        private ApplicationUser CreateUser()
         {
             try
             {
-                return Activator.CreateInstance<IdentityUser>();
+                var user = (ApplicationUser)Activator.CreateInstance(typeof(ApplicationUser));
+                user.FirstName = Input.FirstName;
+                user.LastName = Input.LastName;
+                return user;
             }
             catch
             {

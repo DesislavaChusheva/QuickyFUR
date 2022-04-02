@@ -15,12 +15,13 @@ namespace QuickyFUR.Infrastructure.Data.Models
         [Required]
        // [ForeignKey(nameof(ApplicationUser))]
         public ApplicationUser? ApplicationUser { get; set; }
-       // public string? ApplicationUserId { get; set; }
+        // public string? ApplicationUserId { get; set; }
 
+        [Required]
         [StringLength(CustomerConstraints.ADDRESS_MAX_LENGTH,
                       MinimumLength = CustomerConstraints.ADDRESS_MIN_LENGTH,
                       ErrorMessage = ErrorMessages.stringLengthErrorMessage)]
-        public string? Address { get; set; }
+        public string Address { get; set; }
 
         [StringLength(36)]
         public string? CartId { get; set; }
