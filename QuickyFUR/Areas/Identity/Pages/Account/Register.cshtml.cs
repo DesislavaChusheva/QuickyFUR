@@ -150,7 +150,7 @@ namespace QuickyFUR.Areas.Identity.Pages.Account
                 {
                     var role = Input.Role;
                     await _userManager.AddToRoleAsync(user, role);
-                    
+
 
                     _logger.LogInformation("User created a new account with password.");
 
@@ -168,20 +168,14 @@ namespace QuickyFUR.Areas.Identity.Pages.Account
 
                     if (_userManager.Options.SignIn.RequireConfirmedAccount)
                     {
-                        if (role == "Designer")
-                        {
-                            return RedirectToPage("RegisterDesignerComplete");
-                        }
-                        else
-                        {
-                            return RedirectToPage("RegisterCustomerComplete");
-                        }
+                        return RedirectToPage("RegisterConfirmation", new { email = Input.Email, returnUrl = returnUrl });
                     }
                     else
                     {
                         await _signInManager.SignInAsync(user, isPersistent: false);
                         return LocalRedirect(returnUrl);
                     }
+
                 }
                 foreach (var error in result.Errors)
                 {

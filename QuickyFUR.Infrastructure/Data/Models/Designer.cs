@@ -13,7 +13,7 @@ namespace QuickyFUR.Infrastructure.Data.Models
         public string Id { get; set; } = Guid.NewGuid().ToString();
 
         [Required]
-       // [ForeignKey(nameof(ApplicationUser))]
+       //[ForeignKey(nameof(ApplicationUser))]
         public ApplicationUser? ApplicationUser { get; set; }
        // public string? ApplicationUserId { get; set; }
 

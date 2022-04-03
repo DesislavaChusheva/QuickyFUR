@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using QuickyFUR.Infrastructure.Data;
 
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -16,6 +17,15 @@ builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.Requ
 builder.Services.AddControllersWithViews();
 
 var app = builder.Build();
+
+/*var server = new HttpServer(routes => routes
+               .MapControllers()
+               .MapStaticFiles());
+
+server.ServiceCollection
+    .Add<IUserService, UserService>()
+    .Add<ApplicationDbContext>()
+    .Add<IRepository, Repository>()*/
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

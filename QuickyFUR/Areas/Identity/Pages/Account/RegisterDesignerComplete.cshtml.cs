@@ -4,9 +4,11 @@ using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using QuickyFUR.Infrastructure.Constraints;
+using QuickyFUR.Infrastructure.Data;
+using QuickyFUR.Infrastructure.Data.Models;
+using QuickyFUR.Infrastructure.Data.Models.Identity;
 using QuickyFUR.Infrastructure.Messages;
 using System.ComponentModel.DataAnnotations;
-using static Microsoft.AspNetCore.Identity.UI.V4.Pages.Account.Internal.ExternalLoginModel;
 
 namespace QuickyFUR.Areas.Identity.Pages.Account
 {
@@ -20,6 +22,7 @@ namespace QuickyFUR.Areas.Identity.Pages.Account
         private readonly ILogger<RegisterModel> _logger;
         private readonly IEmailSender _emailSender;
         private readonly RoleManager<IdentityRole> _roleManager;
+        private readonly ApplicationDbContext _data;
 
         public RegisterDesignerCompleteModel(
             UserManager<IdentityUser> userManager,
@@ -27,7 +30,9 @@ namespace QuickyFUR.Areas.Identity.Pages.Account
             SignInManager<IdentityUser> signInManager,
             ILogger<RegisterModel> logger,
             IEmailSender emailSender,
-            RoleManager<IdentityRole> roleManager)
+            RoleManager<IdentityRole> roleManager,
+            ApplicationDbContext data
+            )
         {
             _userManager = userManager;
             _userStore = userStore;
@@ -36,6 +41,7 @@ namespace QuickyFUR.Areas.Identity.Pages.Account
             _logger = logger;
             _emailSender = emailSender;
             _roleManager = roleManager;
+            _data = data;
         }
 
         [BindProperty]
@@ -61,6 +67,44 @@ namespace QuickyFUR.Areas.Identity.Pages.Account
 
             [Required]
             public string Autobiography { get; set; }
+        }
+        public async Task OnGetAsync(string returnUrl = null)
+        {
+            ReturnUrl = returnUrl;
+            ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
+        }
+
+        public async Task<IActionResult> OnPostAsync(string returnUrl = null)
+        {
+            returnUrl ??= Url.Content("~/");
+
+            Designer designer = CreateDesigner();
+
+
+            await _data.AddAsync(designer);
+            await _data.SaveChangesAsync();
+
+            return Redirect("/");
+        }
+        private Designer CreateDesigner()
+        {
+            try
+            {
+                var designer = new Designer()
+                {
+                    ApplicationUser = (ApplicationUser)_userManager.Users.First(),
+                    Country = Input.Country,
+                    Age = Input.Age,
+                    Autobiography = Input.Autobiography
+                };
+                return designer;
+            }
+            catch
+            {
+                throw new InvalidOperationException($"Can't create an instance of '{nameof(IdentityUser)}'. " +
+                    $"Ensure that '{nameof(IdentityUser)}' is not an abstract class and has a parameterless constructor, or alternatively " +
+                    $"override the register page in /Areas/Identity/Pages/Account/Register.cshtml");
+            }
         }
 
         private IUserEmailStore<IdentityUser> GetEmailStore()
