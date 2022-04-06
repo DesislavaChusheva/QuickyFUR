@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace QuickyFUR.Infrastructure.Data.Models
 {
-    public class Field
+    public class Category
     {
         [Key]
         public int Id { get; set; }
@@ -13,7 +13,7 @@ namespace QuickyFUR.Infrastructure.Data.Models
         [StringLength(FieldConstraints.NAME_MAX_LENGTH,
                       MinimumLength = FieldConstraints.NAME_MIN_LENGTH,
                       ErrorMessage = ErrorMessages.stringLengthErrorMessage)]
-        public string Name { get; set; }
+        public string? Name { get; set; }
 
         public IList<Product> Products = new List<Product>();
 

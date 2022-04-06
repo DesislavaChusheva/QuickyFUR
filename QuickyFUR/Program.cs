@@ -1,7 +1,9 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using QuickyFUR.Core.Contracts;
+using QuickyFUR.Core.Services;
 using QuickyFUR.Infrastructure.Data;
-
+using QuickyFUR.Infrastructure.Data.Models.Identity;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -11,23 +13,18 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(connectionString));
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
-builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
+builder.Services.AddDefaultIdentity<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = true)
     .AddRoles<IdentityRole>()
     .AddEntityFrameworkStores<ApplicationDbContext>();
 builder.Services.AddControllersWithViews();
 
+//builder.Services.AddControllersWithViews()
+
+builder.Services.AddApplicationServices();
+
 var app = builder.Build();
 
-/*var server = new HttpServer(routes => routes
-               .MapControllers()
-               .MapStaticFiles());
 
-server.ServiceCollection
-    .Add<IUserService, UserService>()
-    .Add<ApplicationDbContext>()
-    .Add<IRepository, Repository>()*/
-
-// Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
     app.UseMigrationsEndPoint();

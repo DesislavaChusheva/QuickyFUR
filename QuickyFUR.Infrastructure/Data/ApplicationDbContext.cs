@@ -27,7 +27,7 @@ namespace QuickyFUR.Infrastructure.Data
 
         public DbSet<Designer> Designers { get; set; }
         public DbSet<Customer> Customers { get; set; }
-        public DbSet<Field> Fields { get; set; }
+        public DbSet<Category> Categories { get; set; }
         public DbSet<Product> Products { get; set; }
         public DbSet<ConfiguratedProduct> ConfiguratedProducts { get; set;}
         public DbSet<Cart> Carts { get; set; }

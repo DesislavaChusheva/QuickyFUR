@@ -33,7 +33,7 @@ namespace QuickyFUR.Infrastructure.Data.Models
         [Required]
         public string Autobiography { get; set; }
         
-        public IList<Field> Fields = new List<Field>(); 
+        public IList<Category> Categories = new List<Category>(); 
 
         public IList<Product> Products = new List<Product>();
     }

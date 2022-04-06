@@ -17,9 +17,9 @@ namespace QuickyFUR.Infrastructure.Data.Models
         public string Name { get; set; }
 
         [Required]
-        public int FieldId { get; set; }
-        [ForeignKey(nameof(FieldId))]
-        public Field Field { get; set; }
+        public int CategoryId { get; set; }
+        [ForeignKey(nameof(CategoryId))]
+        public Category Category { get; set; }
 
         [Required]
         public byte[] Image { get; set; }

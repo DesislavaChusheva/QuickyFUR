@@ -1,15 +1,16 @@
-﻿using QuickyFUR.Infrastructure.Constraints;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.Extensions.Logging;
+using QuickyFUR.Infrastructure.Constraints;
+using QuickyFUR.Infrastructure.Data.Models;
 using QuickyFUR.Infrastructure.Messages;
 using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 
-namespace QuickyFUR.Infrastructure.Data.Models
+namespace QuickyFUR.Core.Models
 {
-    public class Product
+    public class CreateProductViewModel
     {
-
-        [Key]
-        public int Id { get; set; }
 
         [Required]
         [StringLength(ProductConstraints.NAME_MAX_LENGTH,
@@ -18,18 +19,11 @@ namespace QuickyFUR.Infrastructure.Data.Models
         public string? Name { get; set; }
 
         [Required]
-        public int CategoryId { get; set; }
-        [ForeignKey(nameof(CategoryId))]
-        public Category? Category { get; set; }
+        public string? Category { get; set; }
 
         [Required]
         public byte[]? Image { get; set; }
 
-        [Required]
-        [StringLength(36)]
-        public string? DesignerId { get; set; }
-        [ForeignKey(nameof (DesignerId))]
-        public Designer? Designer { get; set; }
 
         [Required]
         [StringLength(ProductConstraints.DESCRIPTION_MAX_LENGTH,
@@ -38,5 +32,6 @@ namespace QuickyFUR.Infrastructure.Data.Models
 
         [Required]
         public string? ConfiguratorLink { get; set; }
+
     }
 }

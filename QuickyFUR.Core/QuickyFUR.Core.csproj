@@ -10,8 +10,4 @@
     <ProjectReference Include="..\QuickyFUR.Infrastructure\QuickyFUR.Infrastructure.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Models\" />
-  </ItemGroup>
-
 </Project>
