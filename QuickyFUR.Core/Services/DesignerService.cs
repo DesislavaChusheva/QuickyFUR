@@ -21,7 +21,7 @@ namespace QuickyFUR.Core.Services
         {
             _repo = repo;
         }
-        public async Task AddProductAsync(CreateProductViewModel model)
+        public async Task<bool> AddProductAsync(CreateProductViewModel model)
         {
 
             Category? category = _repo.All<Category>().FirstOrDefault(c => c.Name == model.Category);
@@ -42,7 +42,7 @@ namespace QuickyFUR.Core.Services
             await _repo.AddAsync(product);
             await _repo.SaveChangesAsync();
 
-
+            return true;
         }
 
         public IEnumerable<AllProductsViewModel> AllProducts()

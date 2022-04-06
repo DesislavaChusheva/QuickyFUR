@@ -7,6 +7,7 @@ using QuickyFUR.Infrastructure.Constraints;
 using QuickyFUR.Infrastructure.Data;
 using QuickyFUR.Infrastructure.Data.Models;
 using QuickyFUR.Infrastructure.Data.Models.Identity;
+using QuickyFUR.Infrastructure.Data.Repositories;
 using QuickyFUR.Infrastructure.Messages;
 using System.ComponentModel.DataAnnotations;
 
@@ -15,24 +16,23 @@ namespace QuickyFUR.Areas.Identity.Pages.Account
     public class RegisterDesignerCompleteModel : PageModel
     {
 
-        private readonly SignInManager<IdentityUser> _signInManager;
-        private readonly UserManager<IdentityUser> _userManager;
-        private readonly IUserStore<IdentityUser> _userStore;
-        private readonly IUserEmailStore<IdentityUser> _emailStore;
+        private readonly SignInManager<ApplicationUser> _signInManager;
+        private readonly UserManager<ApplicationUser> _userManager;
+        private readonly IUserStore<ApplicationUser> _userStore;
+        private readonly IUserEmailStore<ApplicationUser> _emailStore;
         private readonly ILogger<RegisterModel> _logger;
         private readonly IEmailSender _emailSender;
         private readonly RoleManager<IdentityRole> _roleManager;
-        private readonly ApplicationDbContext _data;
+        private readonly IApplicationDbRepository _repo;
 
         public RegisterDesignerCompleteModel(
-            UserManager<IdentityUser> userManager,
-            IUserStore<IdentityUser> userStore,
-            SignInManager<IdentityUser> signInManager,
+            UserManager<ApplicationUser> userManager,
+            IUserStore<ApplicationUser> userStore,
+            SignInManager<ApplicationUser> signInManager,
             ILogger<RegisterModel> logger,
             IEmailSender emailSender,
             RoleManager<IdentityRole> roleManager,
-            ApplicationDbContext data
-            )
+            IApplicationDbRepository repo)
         {
             _userManager = userManager;
             _userStore = userStore;
@@ -41,7 +41,7 @@ namespace QuickyFUR.Areas.Identity.Pages.Account
             _logger = logger;
             _emailSender = emailSender;
             _roleManager = roleManager;
-            _data = data;
+            _repo = repo;
         }
 
         [BindProperty]
@@ -81,8 +81,8 @@ namespace QuickyFUR.Areas.Identity.Pages.Account
             Designer designer = CreateDesigner();
 
 
-            await _data.AddAsync(designer);
-            await _data.SaveChangesAsync();
+            await _repo.AddAsync(designer);
+            await _repo.SaveChangesAsync();
 
             return Redirect("/");
         }
@@ -90,9 +90,12 @@ namespace QuickyFUR.Areas.Identity.Pages.Account
         {
             try
             {
+                var userId = _userManager.GetUserId(User);
+                ApplicationUser appUser = _repo.All<ApplicationUser>().FirstOrDefault(u => u.Id == userId);
+
                 var designer = new Designer()
                 {
-                    ApplicationUser = (ApplicationUser)_userManager.Users.First(),
+                    ApplicationUser = appUser,
                     Country = Input.Country,
                     Age = Input.Age,
                     Autobiography = Input.Autobiography
@@ -107,13 +110,13 @@ namespace QuickyFUR.Areas.Identity.Pages.Account
             }
         }
 
-        private IUserEmailStore<IdentityUser> GetEmailStore()
+        private IUserEmailStore<ApplicationUser> GetEmailStore()
         {
             if (!_userManager.SupportsUserEmail)
             {
                 throw new NotSupportedException("The default UI requires a user store with email support.");
             }
-            return (IUserEmailStore<IdentityUser>)_userStore;
+            return (IUserEmailStore<ApplicationUser>)_userStore;
         }
     }
 }

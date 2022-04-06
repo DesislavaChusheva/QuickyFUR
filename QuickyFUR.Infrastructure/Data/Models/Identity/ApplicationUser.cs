@@ -12,13 +12,13 @@ namespace QuickyFUR.Infrastructure.Data.Models.Identity
         [StringLength(UserConstraints.NAME_MAX_LENGTH,
                       MinimumLength = UserConstraints.NAME_MIN_LENGTH,
                       ErrorMessage = ErrorMessages.stringLengthErrorMessage)]
-        public string FirstName { get; set; }
+        public string? FirstName { get; set; }
 
         [Required]
         [StringLength(UserConstraints.NAME_MAX_LENGTH,
               MinimumLength = UserConstraints.NAME_MIN_LENGTH,
               ErrorMessage = ErrorMessages.stringLengthErrorMessage)]
-        public string LastName { get; set; }
+        public string? LastName { get; set; }
         public string FullName => $"{FirstName} {LastName}"; 
 
 /*        public Designer? Designer { get; set; }
