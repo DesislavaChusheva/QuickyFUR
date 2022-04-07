@@ -45,9 +45,27 @@ namespace QuickyFUR.Core.Services
             return true;
         }
 
-        public IEnumerable<AllProductsViewModel> AllProducts()
+        public Task<EditProductViewModel> EditProductAsync(string productId)
         {
             throw new NotImplementedException();
+        }
+
+        public IEnumerable<AllProductsViewModel> MyProducts(string designerId)
+        {
+            return _repo.All<Product>()
+                        .Where(p => p.DesignerId == designerId)
+                        .Select(p => new AllProductsViewModel()
+                        {
+                            Name = p.Name,
+                            Category = p.Category.Name,
+                            Image = p.Image,
+                            DesignerName = _repo.All<Designer>()
+                                                .First(d => d.Id == designerId)
+                                                .ApplicationUser
+                                                .FullName,
+                            Descritpion = p.Descritpion,
+                            ConfiguratorLink = p.ConfiguratorLink
+                        });
         }
     }
 }

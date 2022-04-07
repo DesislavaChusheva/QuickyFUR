@@ -5,9 +5,9 @@ VisualStudioVersion = 17.0.32112.339
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "QuickyFUR", "QuickyFUR\QuickyFUR.csproj", "{206E094A-32E6-4475-87FD-807C3B4B1A4F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "QuickyFUR.Core", "QuickyFUR.Core\QuickyFUR.Core.csproj", "{7180460E-EC65-4E66-9821-0A37C78D0926}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "QuickyFUR.Core", "QuickyFUR.Core\QuickyFUR.Core.csproj", "{7180460E-EC65-4E66-9821-0A37C78D0926}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "QuickyFUR.Infrastructure", "QuickyFUR.Infrastructure\QuickyFUR.Infrastructure.csproj", "{0A7C219B-2854-43D9-B252-2AB364350778}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "QuickyFUR.Infrastructure", "QuickyFUR.Infrastructure\QuickyFUR.Infrastructure.csproj", "{0A7C219B-2854-43D9-B252-2AB364350778}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

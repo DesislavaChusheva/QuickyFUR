@@ -12,13 +12,14 @@ namespace QuickyFUR.Core.Models
     {
         public string Name { get; set; }
 
-        public string Field { get; set; }
+        public string Category { get; set; }
 
         public byte[] Image { get; set; }
 
-        public string DesignerId { get; set; }
+/*        public string DesignerId { get; set; }
         [ForeignKey(nameof(DesignerId))]
-        public string Designer { get; set; }
+        public string Designer { get; set; }*/
+        public string DesignerName { get; set; }
 
         public string Descritpion { get; set; }
 

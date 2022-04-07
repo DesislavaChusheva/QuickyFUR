@@ -3,15 +3,19 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using QuickyFUR.Core.Contracts;
 using QuickyFUR.Core.Models;
-using QuickyFUR.Infrastructure.Data;
-using QuickyFUR.Infrastructure.Data.Models;
 using QuickyFUR.Infrastructure.Data.Models.Identity;
 
-namespace QuickyFUR.Areas.Identity.Pages.Account.Controllers
+namespace QuickyFUR.Areas.Identity.Controllers
 {
+    [Area("Identity")]
     [Authorize(Roles = "Designer")]
     public class DesignerController : Controller
     {
+        public IActionResult Index()
+        {
+            return View();
+        }
+
         private readonly RoleManager<IdentityRole> _roleManager;
 
         private readonly UserManager<ApplicationUser> _userManager;
@@ -37,6 +41,12 @@ namespace QuickyFUR.Areas.Identity.Pages.Account.Controllers
             return View(model);
         }
 
+        public IActionResult MyProducts()
+        {
+            IEnumerable<AllProductsViewModel> products = _designerService.MyProducts(_userManager.GetUserId(User));
+            return View(products);
+        }
+
         /*public async Task<ActionResult> CreateCategories()
         {
             Category[] categories = new Category[]
@@ -56,5 +66,6 @@ namespace QuickyFUR.Areas.Identity.Pages.Account.Controllers
 
             return Ok();
         }*/
+
     }
 }

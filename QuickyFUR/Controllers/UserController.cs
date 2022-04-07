@@ -5,11 +5,11 @@ namespace QuickyFUR.Controllers
 {
     public class UserController : Controller
     {
-        private readonly RoleManager<IdentityRole> roleManager;
+        private readonly RoleManager<IdentityRole> _roleManager;
 
-        public UserController(RoleManager<IdentityRole> _roleManager)
+        public UserController(RoleManager<IdentityRole> roleManager)
         {
-            roleManager = _roleManager;
+            _roleManager = roleManager;
         }
         public IActionResult Index()
         {
@@ -17,7 +17,7 @@ namespace QuickyFUR.Controllers
         }
 /*        public async Task<ActionResult> CreateRole()
         {
-            await roleManager.CreateAsync(new IdentityRole()
+            await _roleManager.CreateAsync(new IdentityRole()
             {
                 //Name = "Designer"
                 Name = "Customer"

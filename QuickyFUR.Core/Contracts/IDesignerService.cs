@@ -9,7 +9,8 @@ namespace QuickyFUR.Core.Contracts
 {
     public interface IDesignerService
     {
-        IEnumerable<AllProductsViewModel> AllProducts();
+        IEnumerable<AllProductsViewModel> MyProducts(string designerId);
         Task<bool> AddProductAsync(CreateProductViewModel model);
+        Task<EditProductViewModel> EditProductAsync(string productId);
     }
 }
