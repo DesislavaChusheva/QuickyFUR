@@ -135,18 +135,7 @@ namespace QuickyFUR.Core.Services
                             Country = d.Country,
                             Age = d.Age,
                             Autobiography = d.Autobiography,
-                            Products = _repo.All<Product>()
-                                            .Where(p => p.DesignerId == designerId)
-                                            .Select(p => new AllProductsByDesignerViewModel()
-                                            {
-                                                Name = p.Name,
-                                                Category = p.Category.Name,
-                                                ImageLink = p.ImageLink,
-                                                Descritpion = p.Descritpion,
-                                                ConfiguratorLink = p.ConfiguratorLink
-
-                                            })
-                                            .ToList()
+                            Products = GetProductsForThisDesigner(designerId).ToList()
                         })
                         .ToList()
                         .First();
@@ -154,16 +143,15 @@ namespace QuickyFUR.Core.Services
             return designer;
         }
 
-        public IEnumerable<AllProductsViewModel> GetProductsForThisDesigner(string designerId)
+        public IEnumerable<AllProductsByDesignerViewModel> GetProductsForThisDesigner(string designerId)
         {
             return _repo.All<Product>()
                         .Where(p => p.DesignerId == designerId)
-                        .Select(p => new AllProductsViewModel()
+                        .Select(p => new AllProductsByDesignerViewModel()
                         {
                             Name = p.Name,
                             Category = p.Category.Name,
                             ImageLink = p.ImageLink,
-                            DesignerName = p.Designer.ApplicationUser.FullName,
                             Descritpion = p.Descritpion,
                             ConfiguratorLink = p.ConfiguratorLink
                         });

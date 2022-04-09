@@ -17,6 +17,6 @@ namespace QuickyFUR.Core.Contracts
         Task<bool> BuyProductsFromCart(string cartId);
         Task<decimal> GetCartTotalPrice(string cartId);
         Task<DesignerInfoViewModel> GetDesignerInfoForThisProduct(int productId);
-        IEnumerable<AllProductsViewModel> GetProductsForThisDesigner(string designerId);
+        IEnumerable<AllProductsByDesignerViewModel> GetProductsForThisDesigner(string designerId);
     }
 }

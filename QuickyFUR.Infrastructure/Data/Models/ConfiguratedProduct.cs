@@ -37,6 +37,7 @@ namespace QuickyFUR.Infrastructure.Data.Models
 
         [Required]
         public string? Dimensions { get; set; }
+        public string? Additions { get; set; }
 
         [Required]
         public string? Materials { get; set; }
