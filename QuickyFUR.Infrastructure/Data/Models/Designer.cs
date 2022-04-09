@@ -18,7 +18,7 @@ namespace QuickyFUR.Infrastructure.Data.Models
        // public string? ApplicationUserId { get; set; }
 
         [Required]
-        public string Country { get; set; }
+        public string? Country { get; set; }
 
         [Required]
         [Range(DesignerConstraints.AGE_MIN, 
@@ -31,7 +31,7 @@ namespace QuickyFUR.Infrastructure.Data.Models
                       ErrorMessage = ErrorMessages.noLongerThanErrorMessage)]
 
         [Required]
-        public string Autobiography { get; set; }
+        public string? Autobiography { get; set; }
         
         public IList<Category> Categories = new List<Category>(); 
 

@@ -1,0 +1,65 @@
+﻿@using Microsoft.AspNetCore.Identity
+@using QuickyFUR.Core.Models
+@using (Html.BeginForm())
+
+    @addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+    @addTagHelper *, AuthoringTagHelpers
+    @model IEnumerable<AllProductsByCategoryViewModel>
+@{
+        Layout = "_Layout";
+}
+
+<h1>Products</h1>
+
+
+<form id="categoriesForm" method="post">
+    <div class="form-group">
+        <label>Select</label>
+        <select name="Category" class="form-control">
+            <option name="Category" selected="selected" data-select2-id="1">Tables</option>
+            <option name="Category" data-select2-id="2">Chairs</option>
+            <option name="Category" data-select2-id="3">Armchairs</option>
+            <option name="Category" data-select2-id="4">Sofas</option>
+            <option name="Category" data-select2-id="5">Benches</option>
+            <option name="Category" data-select2-id="6">Wardrobes</option>
+            <option name="Category" data-select2-id="7">KitchenCabinets</option>
+            <option name="Category" data-select2-id="8">Beds</option>
+            <option name="Category" data-select2-id="9">NightStands</option>
+        </select>
+        <button id="categoriesSubmit" type="submit">Show products for category</button>
+    </div>
+</form>
+
+
+
+
+
+@if (Model.FirstOrDefault() == null)
+{
+    <h2>No products!</h2>
+}
+
+else
+{
+    @foreach (var m in Model)
+    {
+        <div class="row">
+            <img src="@m.ImageLink" class="w3-round" alt="Norway">
+            <div class="col-md-4">
+                <b>Product name: </b>
+                <p>"@m.Name"</p>
+            </div>
+            <div class="col-md-4">
+                <b>Designer name: </b>
+                <p>"@m.DesignerName"</p>
+            </div>
+            <div class="col-md-4">
+                <b>Product description: </b>
+                <p>"@m.Descritpion"</p>
+            </div>
+            <a href="@m.ConfiguratorLink" target="_blank">Configurator</a>
+            <a asp-area="Identity" asp-controller="Customer" asp-action="OrderProduct">Order</a>
+        </div>
+    }
+}
+

@@ -9,7 +9,7 @@ namespace QuickyFUR.Infrastructure.Data.Models
         [StringLength(36)]
         public string Id { get; set; } = Guid.NewGuid().ToString();
 
-        public Customer Customer { get; set; }
+        public Customer? Customer { get; set; }
 
         public IList<ConfiguratedProduct> Products { get; set; } = new List<ConfiguratedProduct>();
     }

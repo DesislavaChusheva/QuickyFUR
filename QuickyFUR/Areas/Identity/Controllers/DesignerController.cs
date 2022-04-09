@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using QuickyFUR.Core.Contracts;
 using QuickyFUR.Core.Models;
+using QuickyFUR.Infrastructure.Data.Models;
 using QuickyFUR.Infrastructure.Data.Models.Identity;
 
 namespace QuickyFUR.Areas.Identity.Controllers
@@ -34,11 +35,25 @@ namespace QuickyFUR.Areas.Identity.Controllers
         {
             return View();
         }
+        public IActionResult EditProduct(int productId)
+        {
+            return View();
+        }
+/*
+        [HttpPost]
+        public async Task<IActionResult> EditProduct(int productId)
+        {
+            var 
+        }
+*/
         [HttpPost]
         public async Task<IActionResult> CreateProduct(CreateProductViewModel model)
         {
-            await _designerService.AddProductAsync(model);
-            return View(model);
+            var user = await _userManager.GetUserAsync(User);
+            var userId = await _userManager.GetUserIdAsync(user);
+
+            await _designerService.AddProductAsync(model, userId);
+            return Redirect("/Identity/Designer/MyProducts");
         }
 
         public IActionResult MyProducts()

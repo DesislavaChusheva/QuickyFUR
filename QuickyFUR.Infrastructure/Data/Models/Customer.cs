@@ -21,7 +21,7 @@ namespace QuickyFUR.Infrastructure.Data.Models
         [StringLength(CustomerConstraints.ADDRESS_MAX_LENGTH,
                       MinimumLength = CustomerConstraints.ADDRESS_MIN_LENGTH,
                       ErrorMessage = ErrorMessages.stringLengthErrorMessage)]
-        public string Address { get; set; }
+        public string? Address { get; set; }
 
         [StringLength(36)]
         public string? CartId { get; set; }

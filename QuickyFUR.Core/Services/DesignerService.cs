@@ -21,7 +21,7 @@ namespace QuickyFUR.Core.Services
         {
             _repo = repo;
         }
-        public async Task<bool> AddProductAsync(CreateProductViewModel model)
+        public async Task<bool> AddProductAsync(CreateProductViewModel model, string userId)
         {
 
             Category? category = _repo.All<Category>().FirstOrDefault(c => c.Name == model.Category);
@@ -29,12 +29,16 @@ namespace QuickyFUR.Core.Services
             {
                 throw new ArgumentException(ErrorMessages.categoryErrorMessage);
             }
+            Designer designer = _repo.All<Designer>()
+                                     .Where(d => d.ApplicationUser.Id == userId)
+                                     .First();
 
             Product product = new Product()
             {
                 Name = model.Name,
                 Category = category,
-                Image = model.Image,
+                Designer = designer,
+                ImageLink = model.ImageLink,
                 Descritpion = model.Descritpion,
                 ConfiguratorLink = model.ConfiguratorLink
             };
@@ -45,22 +49,27 @@ namespace QuickyFUR.Core.Services
             return true;
         }
 
-        public Task<EditProductViewModel> EditProductAsync(string productId)
+        public async Task<bool> EditProductAsync(EditProductViewModel model, int productId)
         {
-            throw new NotImplementedException();
+            var productForEdit = _repo.All<Product>()
+                                      .Where(p => p.Id == productId)
+                                      .First();
+
+
+            return true;
         }
 
-        public IEnumerable<AllProductsViewModel> MyProducts(string designerId)
+        public IEnumerable<AllProductsViewModel> MyProducts(string userId)
         {
             return _repo.All<Product>()
-                        .Where(p => p.DesignerId == designerId)
+                        .Where(p => p.Designer.ApplicationUser.Id == userId)
                         .Select(p => new AllProductsViewModel()
                         {
                             Name = p.Name,
                             Category = p.Category.Name,
-                            Image = p.Image,
+                            ImageLink = p.ImageLink,
                             DesignerName = _repo.All<Designer>()
-                                                .First(d => d.Id == designerId)
+                                                .First(d => d.ApplicationUser.Id == userId)
                                                 .ApplicationUser
                                                 .FullName,
                             Descritpion = p.Descritpion,

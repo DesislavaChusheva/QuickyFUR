@@ -15,8 +15,6 @@ namespace QuickyFUR.Core.Models
         public int Age { get; set; }
         public string Autobiography { get; set; }
 
-        public IList<Category> Categories = new List<Category>();
-
-        public IList<Product> Products = new List<Product>();
+        public IEnumerable<AllProductsByDesignerViewModel> Products = new List<AllProductsByDesignerViewModel>();
     }
 }

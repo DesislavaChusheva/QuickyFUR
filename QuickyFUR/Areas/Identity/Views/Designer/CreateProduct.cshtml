@@ -1,0 +1,65 @@
+﻿@using Microsoft.AspNetCore.Identity
+@using QuickyFUR.Core.Models
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@addTagHelper *, AuthoringTagHelpers
+@model CreateProductViewModel
+
+@{
+    Layout = "_Layout";
+}
+
+
+<div class="row">
+    <div class="col-md-4">
+        <form id="createProductForm" method="post">
+            <h2>Create new product.</h2>
+            <hr />
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-floating">
+                <input asp-for="Name" class="form-control" autocomplete="name" aria-required="true" />
+                <label asp-for="Name"></label>
+                <span asp-validation-for="Name" class="text-danger"></span>
+            </div>
+
+            <div class="form-floating">
+                <select asp-for="Category" class="form-control select2bs4 select2-hidden-accessible" style="width: 100%;" data-select2-id="17" tabindex="-1" aria-hidden="true">
+                    <option selected="selected" data-select2-id="1">Tables</option>
+                    <option data-select2-id="2">Chairs</option>
+                    <option data-select2-id="3">Armchairs</option>
+                    <option data-select2-id="4">Sofas</option>
+                    <option data-select2-id="5">Benches</option>
+                    <option data-select2-id="6">Wardrobes</option>
+                    <option data-select2-id="7">KitchenCabinets</option>
+                    <option data-select2-id="8">Beds</option>
+                    <option data-select2-id="9">NightStands</option>
+                </select>
+                <label asp-for="Category"></label>
+                <span asp-validation-for="Category" class="text-danger"></span>
+            </div>
+            <div class="form-floating">
+                <input asp-for="ImageLink" class="form-control" autocomplete="ImageLink" aria-required="true" />
+                <label asp-for="ImageLink"></label>
+                <span asp-validation-for="ImageLink" class="text-danger"></span>
+            </div>
+            <div class="form-floating">
+                <input asp-for="Descritpion" class="form-control" autocomplete="descritpion" aria-required="true" />
+                <label asp-for="Descritpion"></label>
+                <span asp-validation-for="Descritpion" class="text-danger"></span>
+            </div>
+            <div class="form-floating">
+                <input asp-for="ConfiguratorLink" class="form-control" autocomplete="configuratorLink" aria-required="true" />
+                <label asp-for="ConfiguratorLink"></label>
+                <span asp-validation-for="ConfiguratorLink" class="text-danger"></span>
+            </div>
+
+            <button id="createProductSubmit" type="submit" class="w-100 btn btn-lg btn-primary">Create Product</button>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+<partial name="_ValidationScriptsPartial" />
+}
+
+
+

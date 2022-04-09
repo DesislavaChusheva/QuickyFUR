@@ -22,7 +22,7 @@ namespace QuickyFUR.Core.Models
         public string? Category { get; set; }
 
         [Required]
-        public byte[]? Image { get; set; }
+        public string? ImageLink { get; set; }
 
 
         [Required]
