@@ -50,5 +50,6 @@ namespace QuickyFUR.Infrastructure.Data.Models
         public string? CartId { get; set; }
         [ForeignKey(nameof(CartId))]
         public Cart? Cart { get; set; }
+        public bool Sold { get; set; } = false;
     }
 }

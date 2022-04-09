@@ -31,7 +31,7 @@ namespace QuickyFUR.Core.Services
         public async Task<CartViewModel> GetCart(string cartId)
         {
             var products = _repo.All<ConfiguratedProduct>()
-                                .Where(p => p.CartId == cartId)
+                                .Where(p => p.CartId == cartId && p.Sold == false)
                                 .Select(p => new ProductsInCartViewModel()
                                 {
                                     Name = p.Name,
@@ -41,7 +41,8 @@ namespace QuickyFUR.Core.Services
                                     Descritpion = p.Descritpion,
                                     Dimensions = p.Dimensions,
                                     Materials = p.Materials,
-                                    Price = p.Price
+                                    Price = p.Price,
+                                    Sold = p.Sold
                                 });
             decimal totalPrice = products.Sum(p => p.Price);
             return new CartViewModel()
@@ -145,11 +146,14 @@ namespace QuickyFUR.Core.Services
 
         public async Task<bool> BuyProductsFromCart(string cartId)
         {
-            Cart cart = _repo.All<Cart>()
-                             .Where(c => c.Id == cartId)
-                             .First();
+            var productsInCart = _repo.All<ConfiguratedProduct>()
+                                      .Where(p => p.CartId == cartId);
 
-            cart.Products.Clear();
+            foreach (var p in productsInCart)
+            {
+                p.Sold = true;
+            }
+
             await _repo.SaveChangesAsync();
 
             return true;

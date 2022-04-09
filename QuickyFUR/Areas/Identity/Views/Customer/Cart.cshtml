@@ -11,7 +11,7 @@
 <h1>Cart</h1>
 
 
-@if (Model == null)
+@if (Model == null || Model.Products.All(p => p.Sold == true))
 {
     <h2>Yor cart is empty!</h2>
 }
@@ -27,12 +27,12 @@ else
                 <p>@p.Name</p>
             </div>
             <div class="col-md-4">
-                <b>Designer name: </b>
-                <p>@p.DesignerName</p>
+                <b>Dimesions: </b>
+                <p>@p.Dimensions</p>
             </div>
             <div class="col-md-4">
-                <b>Product description: </b>
-                <p>@p.Descritpion</p>
+                <b>Materials: </b>
+                <p>@p.Materials</p>
             </div>
             <div class="col-md-4">
                 <b>Price: </b>
@@ -40,7 +40,7 @@ else
             </div>
         </div>
     }
-    <b>Total price: @Model.TotalPrice $</b> 
-     <a asp-area="Identity" asp-controller="Customer" asp-action="BuyProducts">Buy</a>
+    <b>Total price: @Model.TotalPrice $</b>
+    <a asp-area="Identity" asp-controller="Customer" asp-action="BuyProducts">Buy</a>
 }
 

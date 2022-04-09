@@ -24,5 +24,6 @@ namespace QuickyFUR.Core.Models
         public string? Materials { get; set; }
 
         public decimal Price { get; set; }
+        public bool Sold { get; set; }
     }
 }
