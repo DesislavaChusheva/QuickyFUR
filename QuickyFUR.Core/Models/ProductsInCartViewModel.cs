@@ -19,6 +19,8 @@ namespace QuickyFUR.Core.Models
 
         public string? Dimensions { get; set; }
 
+        public string? Additions { get; set; }
+
         public string? Materials { get; set; }
 
         public decimal Price { get; set; }

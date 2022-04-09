@@ -3,42 +3,44 @@
 
     @addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
     @addTagHelper *, AuthoringTagHelpers
-    @model IEnumerable<ProductsInCartViewModel>
+    @model CartViewModel
 @{
-        Layout = "_Layout";
+    Layout = "_Layout";
 }
 
 <h1>Cart</h1>
 
 
-@if (Model.FirstOrDefault() == null)
+@if (Model == null)
 {
     <h2>Yor cart is empty!</h2>
 }
 
 else
 {
-    <h2>Yor cart is NOT empty!</h2>
-
-    @*@foreach (var m in Model)
+    @foreach (var p in Model.Products)
     {
         <div class="row">
-            <img src="@m.ImageLink" class="w3-round" alt="Norway">
+            <img src="@p.ImageLink" class="w3-round" alt="Norway">
             <div class="col-md-4">
                 <b>Product name: </b>
-                <p>"@m.Name"</p>
+                <p>@p.Name</p>
             </div>
             <div class="col-md-4">
                 <b>Designer name: </b>
-                <p>"@m.DesignerName"</p>
+                <p>@p.DesignerName</p>
             </div>
             <div class="col-md-4">
                 <b>Product description: </b>
-                <p>"@m.Descritpion"</p>
+                <p>@p.Descritpion</p>
             </div>
-            <a href="@m.ConfiguratorLink" target="_blank">Configurator</a>
-            <a asp-area="Identity" asp-controller="Customer" asp-action="OrderProduct">Order</a>
+            <div class="col-md-4">
+                <b>Price: </b>
+                <p>@p.Price</p>
+            </div>
         </div>
-    }*@
+    }
+    <b>Total price: @Model.TotalPrice $</b> 
+     <a asp-area="Identity" asp-controller="Customer" asp-action="BuyProducts">Buy</a>
 }
 

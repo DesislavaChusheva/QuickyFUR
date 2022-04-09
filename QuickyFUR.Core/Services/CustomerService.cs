@@ -28,21 +28,27 @@ namespace QuickyFUR.Core.Services
             return totalPrice;
         }
 
-        public IEnumerable<ProductsInCartViewModel> GetCart(string cartId)
+        public async Task<CartViewModel> GetCart(string cartId)
         {
-            return _repo.All<ConfiguratedProduct>()
-                        .Where(p => p.CartId == cartId)
-                        .Select(p => new ProductsInCartViewModel()
-                        {
-                            Name = p.Name,
-                            Category = p.Category.Name,
-                            ImageLink = p.ImageLink,
-                            DesignerName = p.Designer.ApplicationUser.FullName,
-                            Descritpion = p.Descritpion,
-                            Dimensions = p.Dimensions,
-                            Materials = p.Materials,
-                            Price = p.Price
-                        });
+            var products = _repo.All<ConfiguratedProduct>()
+                                .Where(p => p.CartId == cartId)
+                                .Select(p => new ProductsInCartViewModel()
+                                {
+                                    Name = p.Name,
+                                    Category = p.Category.Name,
+                                    ImageLink = p.ImageLink,
+                                    DesignerName = p.Designer.ApplicationUser.FullName,
+                                    Descritpion = p.Descritpion,
+                                    Dimensions = p.Dimensions,
+                                    Materials = p.Materials,
+                                    Price = p.Price
+                                });
+            decimal totalPrice = products.Sum(p => p.Price);
+            return new CartViewModel()
+            {
+                Products = products.ToList(),
+                TotalPrice = totalPrice
+            };
         }
 
         public async Task<OrderProductViewModel> GetProductForOrder(int productId)
@@ -61,33 +67,62 @@ namespace QuickyFUR.Core.Services
                         .First();
         }
 
-        public async Task<bool> OrderProduct(string productJSON, string userId)
+        public async Task<bool> OrderProduct(string productJSON, int productId, string userId)
         {
-            var configuratedProduct = JsonConvert.DeserializeObject<ConfiguratedProduct>(productJSON);
-            if (configuratedProduct == null)
+            var productForConfiguration = _repo.All<Product>()
+                                               .Where(p => p.Id == productId)
+                                               .First();
+
+            var configuratedProductAddedInformation = JsonConvert.DeserializeObject<ImportConfiguratedProductParametersViewModel>(productJSON);
+
+            if (configuratedProductAddedInformation == null)
             {
                 return false;
             }
 
+            bool priceParsed = Decimal.TryParse(configuratedProductAddedInformation.Price, out decimal price);
+            if (!priceParsed)
+            {
+                return false;
+            }
+
+
+            var configuratedProduct = new ConfiguratedProduct()
+            {
+                Name = productForConfiguration.Name,
+                CategoryId = productForConfiguration.CategoryId,
+                ImageLink = productForConfiguration.ImageLink,
+                DesignerId = productForConfiguration.DesignerId,
+                Descritpion = productForConfiguration.Descritpion,
+                Dimensions = configuratedProductAddedInformation.Dimensions,
+                Additions = configuratedProductAddedInformation.Additions,
+                Materials = configuratedProductAddedInformation.Materials,
+                Price = price
+            };
+
+
             Customer customer = _repo.All<Customer>()
                                      .Where(c => c.ApplicationUser.Id == userId)
                                      .First();
-            Cart? customerCart = customer.Cart;
+            string? customerCartId = customer.CartId;
 
-            if (customerCart == null)
+            if (customerCartId == null)
             {
-                customerCart = new Cart()
+                Cart cart = new Cart();
+
+                cart = new Cart()
                 {
                     Customer = customer
                 };
 
-                await _repo.AddAsync(customerCart);
+                customerCartId = cart.Id;
+
+                await _repo.AddAsync(cart);
             }
 
-            await _repo.AddAsync(configuratedProduct);
+            configuratedProduct.CartId = customerCartId;
 
-            customerCart.Products.Add(configuratedProduct);
-            configuratedProduct.Cart = customerCart;
+            await _repo.AddAsync(configuratedProduct);
 
             await _repo.SaveChangesAsync();
 

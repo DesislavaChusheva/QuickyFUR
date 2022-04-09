@@ -1,0 +1,14 @@
+﻿@using Microsoft.AspNetCore.Identity
+
+
+    @addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+    @addTagHelper *, AuthoringTagHelpers
+
+@{
+    Layout = "_Layout";
+}
+
+<h1>Your order has been accepted!</h1>
+
+
+<a asp-area="Identity" asp-controller="Customer" asp-action="Categories">Back to products</a>

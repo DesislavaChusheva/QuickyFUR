@@ -9,6 +9,7 @@ namespace QuickyFUR.Core.Models
 {
     public class CartViewModel
     {
-        public IList<ConfiguratedProduct> Products { get; set; } = new List<ConfiguratedProduct>();
+        public IList<ProductsInCartViewModel> Products { get; set; } = new List<ProductsInCartViewModel>();
+        public decimal TotalPrice { get; set; }
     }
 }

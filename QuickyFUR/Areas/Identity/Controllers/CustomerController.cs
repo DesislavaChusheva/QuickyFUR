@@ -35,20 +35,21 @@ namespace QuickyFUR.Areas.Identity.Controllers
             var product = await _customerService.GetProductForOrder(4);
             return View(product);
         }
-        public IActionResult AddToCart()
+
+        public async Task<IActionResult> AddToCart()
         {
-            /* var product = await _customerService.OrderProduct(4);
-             return View(product);
-             return View();*/
+            string json = @"{
+  ""Dimensions"": ""600*1400*750"",
+  ""Additions"": ""Fillet/Round"",
+  ""Materials"": ""Black Stainless Steel/Wood"",
+  ""Price"": ""594""
+}";
+            var product = await _customerService.OrderProduct(json, 4, "20f7d9a5-0e6a-41d4-9586-fa530130f903");
             return Redirect("/Identity/Customer/Cart");
         }
-        public IActionResult Cart(string cartId)
+        public async Task<IActionResult> Cart(string cartId)
         {
-            var model = new List<ProductsInCartViewModel>();
-/*            if (cartId == null)
-            {
-            model = _customerService.GetCart(cartId);
-            }*/
+            var model = await _customerService.GetCart("77716156-7c3a-4e3e-b0dd-89ab2647b1e1");
             return View(model);
         }
         public async Task<IActionResult> MoreAboutDesigner()
@@ -57,15 +58,19 @@ namespace QuickyFUR.Areas.Identity.Controllers
             return View(model);
         }
 
-
-        [HttpPost]
-        public async Task<IActionResult> AddToCart(int productId)
+/*        [HttpPost]
+        public async Task<IActionResult> Cart()
         {
-            /*var product = await _customerService.OrderProduct(4);*/
 
-            
-            return Redirect("/Identity/Customer/Cart");
+        }*/
+
+        public async Task<IActionResult> BuyProducts()
+        {
+            await _customerService.BuyProductsFromCart("77716156-7c3a-4e3e-b0dd-89ab2647b1e1");
+            return View();
+
         }
+
         [HttpPost]
         public async Task<IActionResult> Categories(IFormCollection form)
         {
