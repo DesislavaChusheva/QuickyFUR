@@ -245,5 +245,27 @@ namespace QuickyFUR.Core.Services
 
             return true;
         }
+
+        public async Task<EditCustomerProfileViewModel> GetCustomerAsync(string userId)
+        {
+            return _repo.All<Customer>()
+                        .Where(c => c.ApplicationUser.Id == userId)
+                        .Select(c => new EditCustomerProfileViewModel()
+                        {
+                            Address = c.Address
+                        })
+                        .First();
+        }
+
+        public async Task<bool> EditCustomerProfile(EditCustomerProfileViewModel model, string userId)
+        {
+            var customer = _repo.All<Customer>()
+                                .Where(c => c.ApplicationUser.Id == userId)
+                                .First();
+
+            customer.Address = model.Address;
+            await _repo.SaveChangesAsync();
+            return true;
+        }
     }
 }

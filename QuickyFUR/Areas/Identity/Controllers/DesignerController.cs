@@ -31,6 +31,23 @@ namespace QuickyFUR.Areas.Identity.Controllers
             _designerService = designerService;
         }
 
+        public async Task<IActionResult> DesignerAdditionalInformation()
+        {
+            var user = await _userManager.GetUserAsync(User);
+            var userId = await _userManager.GetUserIdAsync(user);
+            var designer = await _designerService.GetDesignerAsync(userId);
+            return View(designer);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> DesignerAdditionalPost(EditDesignerProfileViewModel model)
+        {
+            var user = await _userManager.GetUserAsync(User);
+            var userId = await _userManager.GetUserIdAsync(user);
+
+            await _designerService.EditDesignerProfile(model, userId);
+            return Redirect("/Identity/Account/Manage");
+        }
         public IActionResult CreateProduct()
         {
             return View();

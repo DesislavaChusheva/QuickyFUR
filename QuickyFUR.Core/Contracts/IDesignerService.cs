@@ -15,5 +15,7 @@ namespace QuickyFUR.Core.Contracts
         Task<bool> DeleteProductAsync(int productId);
         Task<EditProductViewModel> GetProductForEditAsync(int productId);
         Task<DeleteProductViewModel> GetProductForDeleteAsync(int productId);
+        Task<EditDesignerProfileViewModel> GetDesignerAsync(string userId);
+        Task<bool> EditDesignerProfile(EditDesignerProfileViewModel model, string userId);
     }
 }

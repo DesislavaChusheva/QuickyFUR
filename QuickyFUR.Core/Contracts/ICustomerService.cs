@@ -21,5 +21,7 @@ namespace QuickyFUR.Core.Contracts
         IEnumerable<AllProductsViewModel> GetAllProductsAsync();
         Task<RemoveProductFromCartViewModel> GetProductForRemoveAsync(int productId);
         Task<bool> RemoveProductAsync(int productId);
+        Task<EditCustomerProfileViewModel> GetCustomerAsync(string userId);
+        Task<bool> EditCustomerProfile(EditCustomerProfileViewModel model, string userId);
     }
 }

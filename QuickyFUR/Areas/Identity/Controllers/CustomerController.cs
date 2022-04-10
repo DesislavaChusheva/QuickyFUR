@@ -27,11 +27,30 @@ namespace QuickyFUR.Areas.Identity.Controllers
             _userManager = userManager;
             _customerService = customerService;
         }
+
+        public async Task<IActionResult> CustomerAdditionalInformation()
+        {
+            var user = await _userManager.GetUserAsync(User);
+            var userId = await _userManager.GetUserIdAsync(user);
+            var customer = await _customerService.GetCustomerAsync(userId);
+            return View(customer);
+        }
+        [HttpPost]
+        public async Task<IActionResult> CustomerAdditionalPost(EditCustomerProfileViewModel model)
+        {
+            var user = await _userManager.GetUserAsync(User);
+            var userId = await _userManager.GetUserIdAsync(user);
+
+            await _customerService.EditCustomerProfile(model, userId);
+            return Redirect("/Identity/Account/Manage");
+        }
+
         public IActionResult Categories()
         {
             var products = _customerService.ProductsByCategoryAsync("Tables");
             return View(products);
         }
+
 
         public async Task<IActionResult> RemoveProductFromCart(int productId)
         {

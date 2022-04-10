@@ -61,6 +61,20 @@ namespace QuickyFUR.Core.Services
             return true;
         }
 
+        public async Task<bool> EditDesignerProfile(EditDesignerProfileViewModel model, string userId)
+        {
+            var designer = _repo.All<Designer>()
+                                .Where(d => d.ApplicationUser.Id == userId)
+                                .First();
+
+            designer.Country = model.Country;
+            designer.Age = model.Age;
+            designer.Autobiography = model.Autobiography;
+
+            await _repo.SaveChangesAsync();
+            return true;
+        }
+
         public async Task<bool> EditProductAsync(EditProductViewModel model, int productId)
         {
             var product = _repo.All<Product>()
@@ -76,6 +90,19 @@ namespace QuickyFUR.Core.Services
             await _repo.SaveChangesAsync();
 
             return true;
+        }
+
+        public async Task<EditDesignerProfileViewModel> GetDesignerAsync(string userId)
+        {
+            return _repo.All<Designer>()
+                        .Where(d => d.ApplicationUser.Id == userId)
+                        .Select(d => new EditDesignerProfileViewModel()
+                        {
+                            Country = d.Country,
+                            Age = d.Age,
+                            Autobiography = d.Autobiography
+                        })
+                        .First();
         }
 
         public async Task<DeleteProductViewModel> GetProductForDeleteAsync(int productId)

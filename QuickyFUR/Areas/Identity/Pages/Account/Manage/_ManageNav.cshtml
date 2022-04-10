@@ -13,9 +13,13 @@
     }
     @if (SignInManager.Context.User.IsInRole("Designer"))
     {
-
+        <li class="nav-item"><a class="nav-link" asp-area="Identity" asp-controller="Designer" asp-action="DesignerAdditionalInformation">Additional information</a></li>
+    }
+    else
+    {
+        <li class="nav-item"><a class="nav-link" asp-area="Identity" asp-controller="Customer" asp-action="CustomerAdditionalInformation">Additional information</a></li>
     }
 
     @* <li class="nav-item"><a class="nav-link @ManageNavPages.TwoFactorAuthenticationNavClass(ViewContext)" id="two-factor" asp-page="./TwoFactorAuthentication">Two-factor authentication</a></li>*@
-    <li class="nav-item"><a class="nav-link @ManageNavPages.PersonalDataNavClass(ViewContext)" id="personal-data" asp-page="./PersonalData">Personal data</a></li>
+    @*<li class="nav-item"><a class="nav-link @ManageNavPages.PersonalDataNavClass(ViewContext)" id="personal-data" asp-page="./PersonalData">Personal data</a></li>*@
 </ul>
