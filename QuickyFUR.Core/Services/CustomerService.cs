@@ -34,9 +34,10 @@ namespace QuickyFUR.Core.Services
                             .Where(c => c.Customer.ApplicationUser.Id == userId)
                             .First();
             var products = _repo.All<ConfiguratedProduct>()
-                                .Where(p => p.Cart.Customer.ApplicationUser.Id == userId && p.Sold == false)
+                                .Where(p => p.Cart.Customer.ApplicationUser.Id == userId && p.Sold == false && p.Removed == false)
                                 .Select(p => new ProductsInCartViewModel()
                                 {
+                                    ProductId = p.Id,
                                     Name = p.Name,
                                     Category = p.Category.Name,
                                     ImageLink = p.ImageLink,
@@ -59,7 +60,7 @@ namespace QuickyFUR.Core.Services
         public async Task<OrderProductViewModel> GetProductForOrderAsync(int productId)
         {
             return _repo.All<Product>()
-                        .Where(p => p.Id == productId)
+                        .Where(p => p.Id == productId && p.Deleted == false)
                         .Select(p => new OrderProductViewModel()
                         {
                             ProductId = productId,
@@ -76,7 +77,7 @@ namespace QuickyFUR.Core.Services
         public async Task<bool> OrderProductAsync(string productJSON, int productId, string userId)
         {
             var productForConfiguration = _repo.All<Product>()
-                                               .Where(p => p.Id == productId)
+                                               .Where(p => p.Id == productId && p.Deleted == false)
                                                .First();
 
             var configuratedProductAddedInformation = JsonConvert.DeserializeObject<ImportConfiguratedProductParametersViewModel>(productJSON);
@@ -137,8 +138,8 @@ namespace QuickyFUR.Core.Services
 
         public IEnumerable<AllProductsViewModel> ProductsByCategoryAsync(string category)
         {
-            var products =  _repo.All<Product>()
-                        .Where(p => p.Category.Name == category)
+            var products = _repo.All<Product>()
+                        .Where(p => p.Category.Name == category && p.Deleted == false)
                         .Select(p => new AllProductsViewModel()
                         {
                             ProdcuctId = p.Id,
@@ -155,7 +156,7 @@ namespace QuickyFUR.Core.Services
         public async Task<bool> BuyProductsFromCartAsync(string cartId)
         {
             var productsInCart = _repo.All<ConfiguratedProduct>()
-                                      .Where(p => p.CartId == cartId);
+                                      .Where(p => p.CartId == cartId && p.Removed == false);
 
             foreach (var p in productsInCart)
             {
@@ -193,7 +194,7 @@ namespace QuickyFUR.Core.Services
         public IEnumerable<AllProductsByDesignerViewModel> GetProductsForThisDesignerAsync(string designerId)
         {
             return _repo.All<Product>()
-                        .Where(p => p.DesignerId == designerId)
+                        .Where(p => p.DesignerId == designerId && p.Deleted == false)
                         .Select(p => new AllProductsByDesignerViewModel()
                         {
                             ProductId = p.Id,
@@ -208,6 +209,7 @@ namespace QuickyFUR.Core.Services
         public IEnumerable<AllProductsViewModel> GetAllProductsAsync()
         {
             return _repo.All<Product>()
+                        .Where(p => p.Deleted == false)
                         .Select(p => new AllProductsViewModel()
                         {
                             Name = p.Name,
@@ -217,6 +219,31 @@ namespace QuickyFUR.Core.Services
                             Descritpion = p.Descritpion,
                             ConfiguratorLink = p.ConfiguratorLink
                         });
+        }
+
+        public async Task<RemoveProductFromCartViewModel> GetProductForRemoveAsync(int productId)
+        {
+            var product = _repo.All<ConfiguratedProduct>()
+                   .Where(p => p.Id == productId && p.Removed == false)
+                   .Select(p => new RemoveProductFromCartViewModel()
+                   {
+                       ProductId = productId,
+                       Name = p.Name
+                   })
+                   .First();
+            return product;
+        }
+
+        public async Task<bool> RemoveProductAsync(int productId)
+        {
+            var product = _repo.All<ConfiguratedProduct>()
+              .Where(p => p.Id == productId)
+              .First();
+
+            product.Removed = true;
+            await _repo.SaveChangesAsync();
+
+            return true;
         }
     }
 }

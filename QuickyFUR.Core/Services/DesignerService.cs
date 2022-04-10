@@ -49,6 +49,18 @@ namespace QuickyFUR.Core.Services
             return true;
         }
 
+        public async Task<bool> DeleteProductAsync(int productId)
+        {
+            var product = _repo.All<Product>()
+                          .Where(p => p.Id == productId)
+                          .First();
+
+            product.Deleted = true;
+            await _repo.SaveChangesAsync();
+
+            return true;
+        }
+
         public async Task<bool> EditProductAsync(EditProductViewModel model, int productId)
         {
             var product = _repo.All<Product>()
@@ -64,6 +76,19 @@ namespace QuickyFUR.Core.Services
             await _repo.SaveChangesAsync();
 
             return true;
+        }
+
+        public async Task<DeleteProductViewModel> GetProductForDeleteAsync(int productId)
+        {
+            var product = _repo.All<Product>()
+                   .Where(p => p.Id == productId)
+                   .Select(p => new DeleteProductViewModel()
+                   {
+                       ProductId = productId,
+                       Name = p.Name
+                   })
+                   .First();
+            return product;
         }
 
         public async Task<EditProductViewModel> GetProductForEditAsync(int productId)
@@ -86,7 +111,7 @@ namespace QuickyFUR.Core.Services
         public IEnumerable<AllProductsViewModel> MyProducts(string userId)
         {
             return _repo.All<Product>()
-                        .Where(p => p.Designer.ApplicationUser.Id == userId)
+                        .Where(p => p.Designer.ApplicationUser.Id == userId && p.Deleted == false)
                         .Select(p => new AllProductsViewModel()
                         {
                             ProdcuctId = p.Id,

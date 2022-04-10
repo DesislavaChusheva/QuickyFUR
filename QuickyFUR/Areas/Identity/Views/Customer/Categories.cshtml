@@ -4,6 +4,7 @@
 @using (Html.BeginForm())
 
     @addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+
     @addTagHelper *, AuthoringTagHelpers
     @model IEnumerable<AllProductsViewModel>
 @{
@@ -46,6 +47,10 @@ else
             <div class="col-md-4">
                 <b>Product name: </b>
                 <p>@m.Name</p>
+            </div>
+            <div class="col-md-4">
+                <b>Category: </b>
+                <p>@m.Category</p>
             </div>
             <div class="col-md-4">
                 <b>Designer name: </b>

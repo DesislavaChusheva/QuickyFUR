@@ -38,5 +38,7 @@ namespace QuickyFUR.Infrastructure.Data.Models
 
         [Required]
         public string? ConfiguratorLink { get; set; }
+
+        public bool Deleted { get; set; } = false;
     }
 }

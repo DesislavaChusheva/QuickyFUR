@@ -19,5 +19,7 @@ namespace QuickyFUR.Core.Contracts
         Task<DesignerInfoViewModel> GetDesignerInfoForThisProductAsync(int productId);
         IEnumerable<AllProductsByDesignerViewModel> GetProductsForThisDesignerAsync(string designerId);
         IEnumerable<AllProductsViewModel> GetAllProductsAsync();
+        Task<RemoveProductFromCartViewModel> GetProductForRemoveAsync(int productId);
+        Task<bool> RemoveProductAsync(int productId);
     }
 }

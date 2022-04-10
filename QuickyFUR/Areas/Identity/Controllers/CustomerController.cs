@@ -32,14 +32,27 @@ namespace QuickyFUR.Areas.Identity.Controllers
             var products = _customerService.ProductsByCategoryAsync("Tables");
             return View(products);
         }
+
+        public async Task<IActionResult> RemoveProductFromCart(int productId)
+        {
+            var product = await _customerService.GetProductForRemoveAsync(productId);
+            return View(product);
+        }
+
+
         public async Task<IActionResult> OrderProduct(int productId)
         {
             var product = await _customerService.GetProductForOrderAsync(productId);
             return View(product);
         }
-
         [HttpPost]
-        public async Task<IActionResult> AddToCart( int productId)
+        public async Task<IActionResult> RemoveProductPost(int productId)
+        {
+            var product = await _customerService.RemoveProductAsync(productId);
+            return Redirect("/Identity/Customer/Cart");
+        }
+        [HttpPost]
+        public async Task<IActionResult> AddToCart(int productId)
         {
             var file = Request.Form.Files[0];
             var result = new StringBuilder();
