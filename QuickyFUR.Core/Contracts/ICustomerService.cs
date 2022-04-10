@@ -10,14 +10,14 @@ namespace QuickyFUR.Core.Contracts
 {
     public interface ICustomerService
     {
-        IEnumerable<AllProductsViewModel> ProductsByCategory(string category);
-        Task<OrderProductViewModel> GetProductForOrder(int productId);
-        Task<bool> OrderProduct(string productJSON, int productId, string userId);
-        Task<CartViewModel> GetCart(string userId);
-        Task<bool> BuyProductsFromCart(string cartId);
-        Task<decimal> GetCartTotalPrice(string cartId);
-        Task<DesignerInfoViewModel> GetDesignerInfoForThisProduct(int productId);
-        IEnumerable<AllProductsByDesignerViewModel> GetProductsForThisDesigner(string designerId);
-        IEnumerable<AllProductsViewModel> GetAllProducts();
+        IEnumerable<AllProductsViewModel> ProductsByCategoryAsync(string category);
+        Task<OrderProductViewModel> GetProductForOrderAsync(int productId);
+        Task<bool> OrderProductAsync(string productJSON, int productId, string userId);
+        Task<CartViewModel> GetCartAsync(string userId);
+        Task<bool> BuyProductsFromCartAsync(string cartId);
+        Task<decimal> GetCartTotalPriceAsync(string cartId);
+        Task<DesignerInfoViewModel> GetDesignerInfoForThisProductAsync(int productId);
+        IEnumerable<AllProductsByDesignerViewModel> GetProductsForThisDesignerAsync(string designerId);
+        IEnumerable<AllProductsViewModel> GetAllProductsAsync();
     }
 }

@@ -35,17 +35,29 @@ namespace QuickyFUR.Areas.Identity.Controllers
         {
             return View();
         }
-        public IActionResult EditProduct(int productId)
+        public async Task<IActionResult> EditProduct(int productId)
+        {
+            var product = await _designerService.GetProductForEditAsync(productId);
+            return View(product);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> EditProductPost(EditProductViewModel model, int productId)
+        {
+            var product = await _designerService.EditProductAsync(model, productId);
+            return Redirect("/Identity/Designer/MyProducts");
+        }
+        public IActionResult DeleteProduct(int productId)
         {
             return View();
         }
-/*
-        [HttpPost]
-        public async Task<IActionResult> EditProduct(int productId)
-        {
-            var 
-        }
-*/
+        /*
+                [HttpPost]
+                public async Task<IActionResult> EditProduct(int productId)
+                {
+                    var 
+                }
+        */
         [HttpPost]
         public async Task<IActionResult> CreateProduct(CreateProductViewModel model)
         {

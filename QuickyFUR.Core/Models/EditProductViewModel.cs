@@ -11,6 +11,7 @@ namespace QuickyFUR.Core.Models
 {
     public class EditProductViewModel
     {
+        public int ProductId { get; set; }
         [Required]
         [StringLength(ProductConstraints.NAME_MAX_LENGTH,
                       MinimumLength = ProductConstraints.NAME_MIN_LENGTH,

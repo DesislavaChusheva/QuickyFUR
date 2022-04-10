@@ -27,15 +27,14 @@ namespace QuickyFUR.Areas.Identity.Controllers
             _userManager = userManager;
             _customerService = customerService;
         }
-        [HttpGet]
         public IActionResult Categories()
         {
-            var products = _customerService.ProductsByCategory("Tables");
+            var products = _customerService.ProductsByCategoryAsync("Tables");
             return View(products);
         }
         public async Task<IActionResult> OrderProduct(int productId)
         {
-            var product = await _customerService.GetProductForOrder(productId);
+            var product = await _customerService.GetProductForOrderAsync(productId);
             return View(product);
         }
 
@@ -54,25 +53,25 @@ namespace QuickyFUR.Areas.Identity.Controllers
             var user = await _userManager.GetUserAsync(User);
             var userId = await _userManager.GetUserIdAsync(user);
 
-            await _customerService.OrderProduct(json, productId, userId);
+            await _customerService.OrderProductAsync(json, productId, userId);
             return Redirect("/Identity/Customer/Cart");
         }
         public async Task<IActionResult> Cart(string cartId)
         {
             var user = await _userManager.GetUserAsync(User);
             var userId = await _userManager.GetUserIdAsync(user);
-            var model = await _customerService.GetCart(userId);
+            var model = await _customerService.GetCartAsync(userId);
             return View(model);
         }
         public async Task<IActionResult> MoreAboutDesigner(int productId)
         {
-            var model = await _customerService.GetDesignerInfoForThisProduct(productId);
+            var model = await _customerService.GetDesignerInfoForThisProductAsync(productId);
             return View(model);
         }
 
         public async Task<IActionResult> BuyProducts(string cartId)
         {
-            await _customerService.BuyProductsFromCart(cartId);
+            await _customerService.BuyProductsFromCartAsync(cartId);
             return View();
 
         }
@@ -81,7 +80,7 @@ namespace QuickyFUR.Areas.Identity.Controllers
         public async Task<IActionResult> Categories(int categoryId)
         {
             var category = Request.Form["Category"].ToString();
-            var products = _customerService.ProductsByCategory(category);
+            var products = _customerService.ProductsByCategoryAsync(category);
             return View(products);
         }
     }

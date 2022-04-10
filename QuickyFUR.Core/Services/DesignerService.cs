@@ -51,12 +51,36 @@ namespace QuickyFUR.Core.Services
 
         public async Task<bool> EditProductAsync(EditProductViewModel model, int productId)
         {
-            var productForEdit = _repo.All<Product>()
+            var product = _repo.All<Product>()
                                       .Where(p => p.Id == productId)
                                       .First();
 
+            product.Name = model.Name;
+            product.CategoryId = _repo.All<Category>().Where(c => c.Name == model.Category).Select(c => c.Id).First();
+            product.ImageLink = model.ImageLink;
+            product.Descritpion = model?.Descritpion;
+            product.ConfiguratorLink = model?.ConfiguratorLink;
+
+            await _repo.SaveChangesAsync();
 
             return true;
+        }
+
+        public async Task<EditProductViewModel> GetProductForEditAsync(int productId)
+        {
+            var product = _repo.All<Product>()
+                               .Where(p => p.Id == productId)
+                               .Select(p => new EditProductViewModel()
+                               {
+                                   ProductId = productId,
+                                   Name = p.Name,
+                                   Category = p.Category.Name,
+                                   ImageLink= p.ImageLink,
+                                   Descritpion= p.Descritpion,
+                                   ConfiguratorLink= p.ConfiguratorLink
+                               })
+                               .First();
+            return product;
         }
 
         public IEnumerable<AllProductsViewModel> MyProducts(string userId)
@@ -65,6 +89,7 @@ namespace QuickyFUR.Core.Services
                         .Where(p => p.Designer.ApplicationUser.Id == userId)
                         .Select(p => new AllProductsViewModel()
                         {
+                            ProdcuctId = p.Id,
                             Name = p.Name,
                             Category = p.Category.Name,
                             ImageLink = p.ImageLink,

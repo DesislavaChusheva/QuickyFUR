@@ -16,9 +16,9 @@
             <hr />
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-floating">
-                <input asp-for="Name" class="form-control" autocomplete="name" aria-required="true" />
-                <label asp-for="Name"></label>
-                <span asp-validation-for="Name" class="text-danger"></span>
+                <input asp-for="@Model.Name" class="form-control" autocomplete="name" aria-required="true" />
+                <label asp-for="@Model.Name"></label>
+                <span asp-validation-for="@Model.Name" class="text-danger"></span>
             </div>
 
             <div class="form-floating">
@@ -37,22 +37,22 @@
                 <span asp-validation-for="Category" class="text-danger"></span>
             </div>
             <div class="form-floating">
-                <input asp-for="ImageLink" class="form-control" autocomplete="ImageLink" aria-required="true" />
-                <label asp-for="ImageLink"></label>
-                <span asp-validation-for="ImageLink" class="text-danger"></span>
+                <input asp-for="@Model.ImageLink" class="form-control" autocomplete="ImageLink" aria-required="true" />
+                <label asp-for="@Model.ImageLink"></label>
+                <span asp-validation-for="@Model.ImageLink" class="text-danger"></span>
             </div>
             <div class="form-floating">
-                <input asp-for="Descritpion" class="form-control" autocomplete="descritpion" aria-required="true" />
-                <label asp-for="Descritpion"></label>
-                <span asp-validation-for="Descritpion" class="text-danger"></span>
+                <input asp-for="@Model.Descritpion" class="form-control" autocomplete="descritpion" aria-required="true" />
+                <label asp-for="@Model.Descritpion"></label>
+                <span asp-validation-for="@Model.Descritpion" class="text-danger"></span>
             </div>
             <div class="form-floating">
-                <input asp-for="ConfiguratorLink" class="form-control" autocomplete="configuratorLink" aria-required="true" />
-                <label asp-for="ConfiguratorLink"></label>
-                <span asp-validation-for="ConfiguratorLink" class="text-danger"></span>
+                <input asp-for="@Model.ConfiguratorLink" class="form-control" autocomplete="configuratorLink" aria-required="true" />
+                <label asp-for="@Model.ConfiguratorLink"></label>
+                <span asp-validation-for="@Model.ConfiguratorLink" class="text-danger"></span>
             </div>
 
-            <button id="editProductSubmit" type="submit" class="w-100 btn btn-lg btn-primary">Edit Product</button>
+            <button type="submit" formmethod="post" class="w-100 btn btn-lg btn-primary" asp-area="Identity" asp-controller="Designer" asp-action="EditProductPost" asp-route-productId="@Model.ProductId">Edit Product</button>
         </form>
     </div>
 </div>
