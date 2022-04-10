@@ -14,6 +14,7 @@ namespace Microsoft.Extensions.DependencyInjection
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<IDesignerService, DesignerService>();
             services.AddScoped<ICustomerService, CustomerService>();
+            services.AddControllersWithViews().AddSessionStateTempDataProvider();
 
             return services;
         }

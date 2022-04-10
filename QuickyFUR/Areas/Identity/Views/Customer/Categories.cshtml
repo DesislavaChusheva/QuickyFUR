@@ -1,10 +1,11 @@
 ﻿@using Microsoft.AspNetCore.Identity
+@using Microsoft.AspNetCore.Mvc.Rendering;
 @using QuickyFUR.Core.Models
 @using (Html.BeginForm())
 
     @addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
     @addTagHelper *, AuthoringTagHelpers
-    @model IEnumerable<AllProductsByCategoryViewModel>
+    @model IEnumerable<AllProductsViewModel>
 @{
         Layout = "_Layout";
 }
@@ -12,7 +13,7 @@
 <h1>Products</h1>
 
 
-<form id="categoriesForm" method="post">
+<form id="categoriesForm" name="Categories" method="post" asp-area="Identity" asp-controller="Customer" asp-action="Categories">
     <div class="form-group">
         <label>Select</label>
         <select name="Category" class="form-control">
@@ -26,9 +27,13 @@
             <option name="Category" data-select2-id="8">Beds</option>
             <option name="Category" data-select2-id="9">NightStands</option>
         </select>
-        <button id="categoriesSubmit" type="submit">Show products for category</button>
+        <button type="submit" value="Categories">Show products for category</button>
     </div>
 </form>
+
+
+@*@Html.DropDownList("Categories", (IEnumerable<SelectListItem>)TempData["Categories"], "---Please Select---")
+<hr />*@
 
 
 
@@ -58,7 +63,7 @@ else
                 <p>@m.Descritpion</p>
             </div>
             <a href="@m.ConfiguratorLink" target="_blank">Configurator</a>
-            <a asp-area="Identity" asp-controller="Customer" asp-action="OrderProduct">Order</a>
+            <a asp-area="Identity" asp-controller="Customer" asp-action="OrderProduct" asp-route-productId="@m.ProdcuctId">Order</a>
         </div>
     }
 }

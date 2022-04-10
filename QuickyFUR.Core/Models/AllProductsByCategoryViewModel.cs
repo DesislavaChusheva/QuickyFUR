@@ -8,6 +8,7 @@ namespace QuickyFUR.Core.Models
 {
     public class AllProductsByCategoryViewModel
     {
+        public int ProdcuctId { get; set; }
         public string? Name { get; set; }
 
         public string? ImageLink { get; set; }

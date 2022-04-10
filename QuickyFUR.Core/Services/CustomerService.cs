@@ -28,10 +28,13 @@ namespace QuickyFUR.Core.Services
             return totalPrice;
         }
 
-        public async Task<CartViewModel> GetCart(string cartId)
+        public async Task<CartViewModel> GetCart(string userId)
         {
+            var cart = _repo.All<Cart>()
+                            .Where(c => c.Customer.ApplicationUser.Id == userId)
+                            .First();
             var products = _repo.All<ConfiguratedProduct>()
-                                .Where(p => p.CartId == cartId && p.Sold == false)
+                                .Where(p => p.Cart.Customer.ApplicationUser.Id == userId && p.Sold == false)
                                 .Select(p => new ProductsInCartViewModel()
                                 {
                                     Name = p.Name,
@@ -47,6 +50,7 @@ namespace QuickyFUR.Core.Services
             decimal totalPrice = products.Sum(p => p.Price);
             return new CartViewModel()
             {
+                CartId = cart.Id,
                 Products = products.ToList(),
                 TotalPrice = totalPrice
             };
@@ -58,6 +62,7 @@ namespace QuickyFUR.Core.Services
                         .Where(p => p.Id == productId)
                         .Select(p => new OrderProductViewModel()
                         {
+                            ProductId = productId,
                             Name = p.Name,
                             Category = p.Category.Name,
                             ImageLink = p.ImageLink,
@@ -130,18 +135,21 @@ namespace QuickyFUR.Core.Services
             return true;
         }
 
-        public IEnumerable<AllProductsByCategoryViewModel> ProductsByCategory(int categoryId)
+        public IEnumerable<AllProductsViewModel> ProductsByCategory(string category)
         {
-            return _repo.All<Product>()
-                        .Where(p => p.CategoryId == categoryId)
-                        .Select(p => new AllProductsByCategoryViewModel()
+            var products =  _repo.All<Product>()
+                        .Where(p => p.Category.Name == category)
+                        .Select(p => new AllProductsViewModel()
                         {
+                            ProdcuctId = p.Id,
                             Name = p.Name,
                             ImageLink = p.ImageLink,
+                            Category = p.Category.Name,
                             DesignerName = p.Designer.ApplicationUser.FullName,
                             Descritpion = p.Descritpion,
                             ConfiguratorLink = p.ConfiguratorLink
                         });
+            return products;
         }
 
         public async Task<bool> BuyProductsFromCart(string cartId)
@@ -188,9 +196,24 @@ namespace QuickyFUR.Core.Services
                         .Where(p => p.DesignerId == designerId)
                         .Select(p => new AllProductsByDesignerViewModel()
                         {
+                            ProductId = p.Id,
                             Name = p.Name,
                             Category = p.Category.Name,
                             ImageLink = p.ImageLink,
+                            Descritpion = p.Descritpion,
+                            ConfiguratorLink = p.ConfiguratorLink
+                        });
+        }
+
+        public IEnumerable<AllProductsViewModel> GetAllProducts()
+        {
+            return _repo.All<Product>()
+                        .Select(p => new AllProductsViewModel()
+                        {
+                            Name = p.Name,
+                            Category = p.Category.Name,
+                            ImageLink = p.ImageLink,
+                            DesignerName = p.Designer.ApplicationUser.FullName,
                             Descritpion = p.Descritpion,
                             ConfiguratorLink = p.ConfiguratorLink
                         });

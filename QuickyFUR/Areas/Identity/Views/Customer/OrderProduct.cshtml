@@ -27,14 +27,12 @@
         <p>@Model.Descritpion</p>
     </div>
     <a href="@Model.ConfiguratorLink" target="_blank">Configurator</a>
-    <a asp-area="Identity" asp-controller="Customer" asp-action="MoreAboutDesigner">More about @Model.DesignerName</a>
-    <form>
-        <div class="form-group">
-            <div class="custom-file">
-                <input type="file" class="custom-file-input" id="customFile">
-                <label class="custom-file-label" for="customFile">Configurated product file here!</label>
-                <a asp-area="Identity" asp-controller="Customer" asp-action="AddToCart">Add to cart</a>
-            </div>
-        </div>
+    <a asp-area="Identity" asp-controller="Customer" asp-action="MoreAboutDesigner" asp-route-productId="@Model.ProductId">More about @Model.DesignerName</a>
+
+
+    <form method="post" enctype="multipart/form-data" asp-area="Identity" asp-controller="Customer" asp-action="AddToCart" asp-route-productId="@Model.ProductId">
+        <input type="file" name="jsonFile">
+        <button type="submit" value="Upload">AddToCart</button>
     </form>
+
 </div>

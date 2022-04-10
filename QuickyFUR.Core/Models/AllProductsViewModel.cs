@@ -10,6 +10,7 @@ namespace QuickyFUR.Core.Models
 {
     public class AllProductsViewModel
     {
+        public int ProdcuctId { get; set; }
         public string? Name { get; set; }
 
         public string? Category { get; set; }
