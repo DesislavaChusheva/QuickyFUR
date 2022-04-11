@@ -3,6 +3,7 @@ using NUnit.Framework;
 using QuickyFUR.Core.Contracts;
 using QuickyFUR.Core.Services;
 using QuickyFUR.Infrastructure.Data.Models;
+using QuickyFUR.Infrastructure.Data.Models.Identity;
 using QuickyFUR.Infrastructure.Data.Repositories;
 using System.Threading.Tasks;
 
@@ -26,10 +27,9 @@ namespace QuickyFUR.Test
                 .BuildServiceProvider();
 
             var repo = _serviceProvider.GetService<IApplicationDbRepository>();
-            /*var designer = new Designer()
-            {
-                 
-            };*/
+
+            await SeedDbAsync(repo);
+
         }
 
         [Test]
@@ -41,7 +41,27 @@ namespace QuickyFUR.Test
         [TearDown]
         public void TearDown()
         {
+            _dbContext.Dispose();
+        }
 
+        private async Task SeedDbAsync(IApplicationDbRepository repo)
+        {
+            var applicationUser = new ApplicationUser()
+            {
+                FirstName = "Ivan",
+                LastName = "Ivanov"
+            };
+            var designer = new Designer()
+            {
+                ApplicationUser = applicationUser,
+                Country = "Bulgaria",
+                Age = 30,
+                Autobiography = "Autobiography"
+            };
+
+            await repo.AddAsync(applicationUser);
+            await repo.AddAsync(designer);
+            await repo.SaveChangesAsync();
         }
     }
 }

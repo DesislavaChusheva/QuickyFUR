@@ -15,7 +15,7 @@ namespace QuickyFUR.Core.Contracts
         Task<bool> OrderProductAsync(string productJSON, int productId, string userId);
         Task<CartViewModel> GetCartAsync(string userId);
         Task<bool> BuyProductsFromCartAsync(string cartId);
-        Task<decimal> GetCartTotalPriceAsync(string cartId);
+        /*Task<decimal> GetCartTotalPriceAsync(string cartId);*/
         Task<DesignerInfoViewModel> GetDesignerInfoForThisProductAsync(int productId);
         IEnumerable<AllProductsByDesignerViewModel> GetProductsForThisDesignerAsync(string designerId);
         IEnumerable<AllProductsViewModel> GetAllProductsAsync();

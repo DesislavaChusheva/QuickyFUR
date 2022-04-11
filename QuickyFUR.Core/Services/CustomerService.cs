@@ -3,6 +3,7 @@ using QuickyFUR.Core.Models;
 using QuickyFUR.Infrastructure.Data.Models;
 using QuickyFUR.Infrastructure.Data.Repositories;
 using Newtonsoft.Json;
+using QuickyFUR.Core.Messages;
 
 namespace QuickyFUR.Core.Services
 {
@@ -16,22 +17,38 @@ namespace QuickyFUR.Core.Services
             _repo = repo;
         }
 
-        public async Task<decimal> GetCartTotalPriceAsync(string cartId)
-        {
-            Cart cart = _repo.All<Cart>()
-                        .Where(c => c.Id == cartId)
-                        .First();
+        /*        public async Task<decimal> GetCartTotalPriceAsync(string cartId)
+                {
+                    Cart cart = _repo.All<Cart>()
+                                .Where(c => c.Id == cartId)
+                                .First();
 
-            decimal totalPrice = cart.Products.Sum(c => c.Price);
+                    if (cart == null)
+                    {
+                        throw new InvalidOperationException(ErrorMessages.modelNotFound);
+                    }
 
-            return totalPrice;
-        }
+                    decimal totalPrice = cart.Products.Sum(c => c.Price);
+
+                    return totalPrice;
+                }*/
 
         public async Task<CartViewModel> GetCartAsync(string userId)
         {
+            string cartId = _repo.All<Customer>()
+                                .Where(c => c.ApplicationUser.Id == userId)
+                                .Select(c => c.CartId == null ? null : c.CartId)
+                                .First();
+
+            if (cartId == null)
+            {
+                return null;
+            }
+
             var cart = _repo.All<Cart>()
                             .Where(c => c.Customer.ApplicationUser.Id == userId)
                             .First();
+            
             var products = _repo.All<ConfiguratedProduct>()
                                 .Where(p => p.Cart.Customer.ApplicationUser.Id == userId && p.Sold == false && p.Removed == false)
                                 .Select(p => new ProductsInCartViewModel()
@@ -58,19 +75,26 @@ namespace QuickyFUR.Core.Services
 
         public async Task<OrderProductViewModel> GetProductForOrderAsync(int productId)
         {
-            return _repo.All<Product>()
-                        .Where(p => p.Id == productId && p.Deleted == false)
-                        .Select(p => new OrderProductViewModel()
-                        {
-                            ProductId = productId,
-                            Name = p.Name,
-                            Category = p.Category.Name,
-                            ImageLink = p.ImageLink,
-                            DesignerName = p.Designer.ApplicationUser.FullName,
-                            Descritpion = p.Descritpion,
-                            ConfiguratorLink = p.ConfiguratorLink
-                        })
-                        .First();
+            var product = _repo.All<Product>()
+                               .Where(p => p.Id == productId && p.Deleted == false)
+                               .Select(p => new OrderProductViewModel()
+                               {
+                                   ProductId = productId,
+                                   Name = p.Name,
+                                   Category = p.Category.Name,
+                                   ImageLink = p.ImageLink,
+                                   DesignerName = p.Designer.ApplicationUser.FullName,
+                                   Descritpion = p.Descritpion,
+                                   ConfiguratorLink = p.ConfiguratorLink
+                               })
+                               .First();
+
+            if (product == null)
+            {
+                throw new InvalidOperationException(ErrorMessages.modelNotFound);
+            }
+
+            return product;
         }
 
         public async Task<bool> OrderProductAsync(string productJSON, int productId, string userId)
@@ -78,6 +102,11 @@ namespace QuickyFUR.Core.Services
             var productForConfiguration = _repo.All<Product>()
                                                .Where(p => p.Id == productId && p.Deleted == false)
                                                .First();
+
+            if (productForConfiguration == null)
+            {
+                throw new InvalidOperationException(ErrorMessages.modelNotFound);
+            }
 
             var configuratedProductAddedInformation = JsonConvert.DeserializeObject<ImportConfiguratedProductParametersViewModel>(productJSON);
 
@@ -110,6 +139,12 @@ namespace QuickyFUR.Core.Services
             Customer customer = _repo.All<Customer>()
                                      .Where(c => c.ApplicationUser.Id == userId)
                                      .First();
+
+            if (productForConfiguration == null)
+            {
+                throw new InvalidOperationException(ErrorMessages.modelNotFound);
+            }
+
             string? customerCartId = customer.CartId;
 
             if (customerCartId == null)
@@ -157,6 +192,11 @@ namespace QuickyFUR.Core.Services
             var productsInCart = _repo.All<ConfiguratedProduct>()
                                       .Where(p => p.CartId == cartId && p.Removed == false);
 
+            if (productsInCart.ToList().Count == 0)
+            {
+                throw new InvalidOperationException(ErrorMessages.modelNotFound);
+            }
+
             foreach (var p in productsInCart)
             {
                 p.Sold = true;
@@ -173,6 +213,11 @@ namespace QuickyFUR.Core.Services
                                   .Where(p => p.Id == productId)
                                   .Select(p => p.DesignerId)
                                   .First();
+
+            if (designerId == null)
+            {
+                throw new InvalidOperationException(ErrorMessages.modelNotFound);
+            }
 
             var designer = _repo.All<Designer>()
                         .Where(d => d.Id == designerId)
@@ -192,17 +237,24 @@ namespace QuickyFUR.Core.Services
 
         public IEnumerable<AllProductsByDesignerViewModel> GetProductsForThisDesignerAsync(string designerId)
         {
-            return _repo.All<Product>()
-                        .Where(p => p.DesignerId == designerId && p.Deleted == false)
-                        .Select(p => new AllProductsByDesignerViewModel()
-                        {
-                            ProductId = p.Id,
-                            Name = p.Name,
-                            Category = p.Category.Name,
-                            ImageLink = p.ImageLink,
-                            Descritpion = p.Descritpion,
-                            ConfiguratorLink = p.ConfiguratorLink
-                        });
+            var products = _repo.All<Product>()
+                                .Where(p => p.DesignerId == designerId && p.Deleted == false)
+                                .Select(p => new AllProductsByDesignerViewModel()
+                                {
+                                    ProductId = p.Id,
+                                    Name = p.Name,
+                                    Category = p.Category.Name,
+                                    ImageLink = p.ImageLink,
+                                    Descritpion = p.Descritpion,
+                                    ConfiguratorLink = p.ConfiguratorLink
+                                });
+
+            if (products.ToList().Count == 0)
+            {
+                throw new InvalidOperationException(ErrorMessages.modelNotFound);
+            }
+
+            return products;
         }
 
         public IEnumerable<AllProductsViewModel> GetAllProductsAsync()
@@ -230,6 +282,12 @@ namespace QuickyFUR.Core.Services
                        Name = p.Name
                    })
                    .First();
+
+            if (product == null)
+            {
+                throw new InvalidOperationException(ErrorMessages.modelNotFound);
+            }
+
             return product;
         }
 
@@ -239,6 +297,11 @@ namespace QuickyFUR.Core.Services
               .Where(p => p.Id == productId)
               .First();
 
+            if (product == null)
+            {
+                throw new InvalidOperationException(ErrorMessages.modelNotFound);
+            }
+
             product.Removed = true;
             await _repo.SaveChangesAsync();
 
@@ -247,20 +310,37 @@ namespace QuickyFUR.Core.Services
 
         public async Task<EditCustomerProfileViewModel> GetCustomerAsync(string userId)
         {
-            return _repo.All<Customer>()
-                        .Where(c => c.ApplicationUser.Id == userId)
-                        .Select(c => new EditCustomerProfileViewModel()
-                        {
-                            Address = c.Address
-                        })
-                        .First();
+            var customer = _repo.All<Customer>()
+                                .Where(c => c.ApplicationUser.Id == userId)
+                                .Select(c => new EditCustomerProfileViewModel()
+                                {
+                                    Address = c.Address
+                                })
+                                .First();
+
+            if (customer == null)
+            {
+                throw new InvalidOperationException(ErrorMessages.modelNotFound);
+            }
+
+            return customer;
         }
 
         public async Task<bool> EditCustomerProfile(EditCustomerProfileViewModel model, string userId)
         {
+            if (model == null)
+            {
+                throw new ArgumentException(ErrorMessages.modelIsEmpty);
+            }
+
             var customer = _repo.All<Customer>()
                                 .Where(c => c.ApplicationUser.Id == userId)
                                 .First();
+
+            if (customer == null)
+            {
+                throw new InvalidOperationException(ErrorMessages.modelNotFound);
+            }
 
             customer.Address = model.Address;
             await _repo.SaveChangesAsync();
@@ -299,10 +379,10 @@ namespace QuickyFUR.Core.Services
                                     }).ToList();
 
                 var orders = new OrderPageViewModel()
-                                 {
-                                     DorCSide = designer,
-                                     Products = products
-                                 };
+                {
+                    DorCSide = designer,
+                    Products = products
+                };
 
                 finalOrders.Add(orders);
             }

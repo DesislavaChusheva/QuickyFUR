@@ -29,6 +29,12 @@ namespace QuickyFUR.Core.Services
             {
                 throw new ArgumentException(ErrorMessages.categoryErrorMessage);
             }
+
+            if (model == null)
+            {
+                throw new ArgumentException(ErrorMessages.modelIsEmpty);
+            }
+
             Designer designer = _repo.All<Designer>()
                                      .Where(d => d.ApplicationUser.Id == userId)
                                      .First();
@@ -55,6 +61,11 @@ namespace QuickyFUR.Core.Services
                           .Where(p => p.Id == productId)
                           .First();
 
+            if (product == null)
+            {
+                throw new InvalidOperationException(ErrorMessages.modelNotFound);
+            }
+
             product.Deleted = true;
             await _repo.SaveChangesAsync();
 
@@ -63,9 +74,22 @@ namespace QuickyFUR.Core.Services
 
         public async Task<bool> EditDesignerProfile(EditDesignerProfileViewModel model, string userId)
         {
+            if (model == null)
+            {
+                throw new ArgumentException(ErrorMessages.modelIsEmpty);
+            }
+            if (userId == null)
+            {
+                throw new ArgumentException(ErrorMessages.emptyParameter);
+            }
             var designer = _repo.All<Designer>()
                                 .Where(d => d.ApplicationUser.Id == userId)
                                 .First();
+
+            if (designer == null)
+            {
+                throw new InvalidOperationException(ErrorMessages.modelNotFound);
+            }
 
             designer.Country = model.Country;
             designer.Age = model.Age;
@@ -77,9 +101,19 @@ namespace QuickyFUR.Core.Services
 
         public async Task<bool> EditProductAsync(EditProductViewModel model, int productId)
         {
+            if (model == null)
+            {
+                throw new ArgumentException(ErrorMessages.modelIsEmpty);
+            }
+
             var product = _repo.All<Product>()
                                       .Where(p => p.Id == productId)
                                       .First();
+
+            if (product == null)
+            {
+                throw new InvalidOperationException(ErrorMessages.modelNotFound);
+            }
 
             product.Name = model.Name;
             product.CategoryId = _repo.All<Category>().Where(c => c.Name == model.Category).Select(c => c.Id).First();
@@ -94,15 +128,22 @@ namespace QuickyFUR.Core.Services
 
         public async Task<EditDesignerProfileViewModel> GetDesignerAsync(string userId)
         {
-            return _repo.All<Designer>()
-                        .Where(d => d.ApplicationUser.Id == userId)
-                        .Select(d => new EditDesignerProfileViewModel()
-                        {
-                            Country = d.Country,
-                            Age = d.Age,
-                            Autobiography = d.Autobiography
-                        })
-                        .First();
+            var designer = _repo.All<Designer>()
+                                .Where(d => d.ApplicationUser.Id == userId)
+                                .Select(d => new EditDesignerProfileViewModel()
+                                {
+                                    Country = d.Country,
+                                    Age = d.Age,
+                                    Autobiography = d.Autobiography
+                                })
+                                .First();
+
+            if (designer == null)
+            {
+                throw new InvalidOperationException(ErrorMessages.modelNotFound);
+            }
+
+            return designer;
         }
 
         public async Task<List<OrderPageViewModel>> GetOrders(string userId)
@@ -142,11 +183,11 @@ namespace QuickyFUR.Core.Services
                                         Price = p.Price
                                     }).ToList();
 
-                var orders =  new OrderPageViewModel()
-                                 {
-                                     DorCSide = customer,
-                                     Products = products
-                                 };
+                var orders = new OrderPageViewModel()
+                {
+                    DorCSide = customer,
+                    Products = products
+                };
 
                 finalOrders.Add(orders);
             }
@@ -164,6 +205,12 @@ namespace QuickyFUR.Core.Services
                        Name = p.Name
                    })
                    .First();
+
+            if (product == null)
+            {
+                throw new InvalidOperationException(ErrorMessages.modelNotFound);
+            }
+
             return product;
         }
 
@@ -181,26 +228,34 @@ namespace QuickyFUR.Core.Services
                                    ConfiguratorLink = p.ConfiguratorLink
                                })
                                .First();
+
+            if (product == null)
+            {
+                throw new InvalidOperationException(ErrorMessages.modelNotFound);
+            }
+
             return product;
         }
 
         public IEnumerable<AllProductsViewModel> MyProducts(string userId)
         {
-            return _repo.All<Product>()
-                        .Where(p => p.Designer.ApplicationUser.Id == userId && p.Deleted == false)
-                        .Select(p => new AllProductsViewModel()
-                        {
-                            ProdcuctId = p.Id,
-                            Name = p.Name,
-                            Category = p.Category.Name,
-                            ImageLink = p.ImageLink,
-                            DesignerName = _repo.All<Designer>()
+            var products = _repo.All<Product>()
+                                .Where(p => p.Designer.ApplicationUser.Id == userId && p.Deleted == false)
+                                .Select(p => new AllProductsViewModel()
+                                {
+                                    ProdcuctId = p.Id,
+                                    Name = p.Name,
+                                    Category = p.Category.Name,
+                                    ImageLink = p.ImageLink,
+                                    DesignerName = _repo.All<Designer>()
                                                 .First(d => d.ApplicationUser.Id == userId)
                                                 .ApplicationUser
                                                 .FullName,
-                            Descritpion = p.Descritpion,
-                            ConfiguratorLink = p.ConfiguratorLink
-                        });
+                                    Descritpion = p.Descritpion,
+                                    ConfiguratorLink = p.ConfiguratorLink
+                                });
+
+            return products;
         }
     }
 }
