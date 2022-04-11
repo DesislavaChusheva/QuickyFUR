@@ -9,6 +9,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "QuickyFUR.Core", "QuickyFUR
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "QuickyFUR.Infrastructure", "QuickyFUR.Infrastructure\QuickyFUR.Infrastructure.csproj", "{0A7C219B-2854-43D9-B252-2AB364350778}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "QuickyFUR.Test", "QuickyFUR.Test\QuickyFUR.Test.csproj", "{6F24E801-F496-44D7-963D-3BB8B911BDCF}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,10 @@ Global
 		{0A7C219B-2854-43D9-B252-2AB364350778}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0A7C219B-2854-43D9-B252-2AB364350778}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0A7C219B-2854-43D9-B252-2AB364350778}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6F24E801-F496-44D7-963D-3BB8B911BDCF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6F24E801-F496-44D7-963D-3BB8B911BDCF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6F24E801-F496-44D7-963D-3BB8B911BDCF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6F24E801-F496-44D7-963D-3BB8B911BDCF}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

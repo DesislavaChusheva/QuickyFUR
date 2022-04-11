@@ -15,7 +15,7 @@ namespace QuickyFUR.Controllers
         {
             return View();
         }
-/*        public async Task<ActionResult> CreateRole()
+        /*public async Task<ActionResult> CreateRole()
         {
             await _roleManager.CreateAsync(new IdentityRole()
             {
@@ -26,6 +26,25 @@ namespace QuickyFUR.Controllers
             return Ok();
         }*/
 
+        /*public async Task<ActionResult> CreateCategories()
+        {
+            Category[] categories = new Category[]
+            {
+                new Category() { Name = "Tables"},
+                new Category() { Name = "Chairs"},
+                new Category() { Name = "Armchairs"},
+                new Category() { Name = "Sofas"},
+                new Category() { Name = "Benches"},
+                new Category() { Name = "Wardrobes"},
+                new Category() { Name = "KitchenCabinets"},
+                new Category() { Name = "Beds"},
+                new Category() { Name = "NightStands"},
+            };
+            await _data.AddRangeAsync();
+            await _data.SaveChangesAsync();
+
+            return Ok();
+        }*/
 
 
     }

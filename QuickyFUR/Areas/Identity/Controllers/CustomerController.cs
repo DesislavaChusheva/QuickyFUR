@@ -46,7 +46,7 @@ namespace QuickyFUR.Areas.Identity.Controllers
         }
 
         public IActionResult Categories()
-        {
+        {            
             var products = _customerService.ProductsByCategoryAsync("Tables");
             return View(products);
         }

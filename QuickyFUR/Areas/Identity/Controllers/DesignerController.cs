@@ -94,25 +94,5 @@ namespace QuickyFUR.Areas.Identity.Controllers
             return View(products);
         }
 
-        /*public async Task<ActionResult> CreateCategories()
-        {
-            Category[] categories = new Category[]
-            {
-                new Category() { Name = "Tables"},
-                new Category() { Name = "Chairs"},
-                new Category() { Name = "Armchairs"},
-                new Category() { Name = "Sofas"},
-                new Category() { Name = "Benches"},
-                new Category() { Name = "Wardrobes"},
-                new Category() { Name = "KitchenCabinets"},
-                new Category() { Name = "Beds"},
-                new Category() { Name = "NightStands"},
-            };
-            await _data.AddRangeAsync();
-            await _data.SaveChangesAsync();
-
-            return Ok();
-        }*/
-
     }
 }
