@@ -16,7 +16,7 @@ namespace QuickyFUR.Test
 
         public InMemoryDbContext()
         {
-            connection = new SqliteConnection("Filename=memory:");
+            connection = new SqliteConnection("Filename=:memory:");
             connection.Open();
 
             dbContextOptions = new DbContextOptionsBuilder<ApplicationDbContext>()

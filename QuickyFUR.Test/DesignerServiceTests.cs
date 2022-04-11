@@ -1,10 +1,13 @@
 using Microsoft.Extensions.DependencyInjection;
 using NUnit.Framework;
 using QuickyFUR.Core.Contracts;
+using QuickyFUR.Core.Messages;
+using QuickyFUR.Core.Models;
 using QuickyFUR.Core.Services;
 using QuickyFUR.Infrastructure.Data.Models;
 using QuickyFUR.Infrastructure.Data.Models.Identity;
 using QuickyFUR.Infrastructure.Data.Repositories;
+using System;
 using System.Threading.Tasks;
 
 namespace QuickyFUR.Test
@@ -20,6 +23,7 @@ namespace QuickyFUR.Test
             _dbContext = new InMemoryDbContext();
 
             var serviceCollection = new ServiceCollection();
+
             _serviceProvider = serviceCollection
                 .AddSingleton(sp => _dbContext.CreateContext())
                 .AddSingleton<IApplicationDbRepository, ApplicationDbRepository>()
@@ -33,10 +37,21 @@ namespace QuickyFUR.Test
         }
 
         [Test]
-        public void Test1()
+        public void AddProductAsyncThrowsWhenEmptyProduct()
         {
-            Assert.Pass();
+            CreateProductViewModel product = null;
+
+            var service = _serviceProvider.GetService<IDesignerService>();
+            var userId = new Guid().ToString();
+
+            Assert.CatchAsync<ArgumentException>(async () => await service.AddProductAsync(product, userId), ErrorMessages.modelIsEmpty);
         }
+
+/*        [Test]
+        public void DeleteProductAsyncThrowsWhenEmptyProduct()
+        {
+            var porductId = 2
+        }*/
 
         [TearDown]
         public void TearDown()

@@ -24,16 +24,12 @@ namespace QuickyFUR.Core.Services
         public async Task<bool> AddProductAsync(CreateProductViewModel model, string userId)
         {
 
-            Category? category = _repo.All<Category>().FirstOrDefault(c => c.Name == model.Category);
-            if (category == null)
-            {
-                throw new ArgumentException(ErrorMessages.categoryErrorMessage);
-            }
-
             if (model == null)
             {
                 throw new ArgumentException(ErrorMessages.modelIsEmpty);
             }
+
+            Category? category = _repo.All<Category>().FirstOrDefault(c => c.Name == model.Category);
 
             Designer designer = _repo.All<Designer>()
                                      .Where(d => d.ApplicationUser.Id == userId)

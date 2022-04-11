@@ -23,7 +23,7 @@ namespace Microsoft.Extensions.DependencyInjection
         {
             var connectionString = config.GetConnectionString("DefaultConnection");
             services.AddDbContext<ApplicationDbContext>(options =>
-                options.UseSqlServer(connectionString));
+                options.UseSqlServer(@"Server=.;Database=QuickyFUR;Trusted_Connection=True;"));
             services.AddDatabaseDeveloperPageExceptionFilter();
 
             return services;
