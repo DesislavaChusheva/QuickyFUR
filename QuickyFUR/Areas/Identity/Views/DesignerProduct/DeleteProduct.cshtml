@@ -14,7 +14,7 @@
         <form id="editProductForm" method="post">
             <h2>Do you want to delete @Model.Name?</h2>
             <hr />
-            <button type="submit" formmethod="post" class="w-100 btn btn-lg btn-primary" asp-area="Identity" asp-controller="Designer" asp-action="DeleteProductPost" asp-route-productId="@Model.ProductId">Delete!</button>
+            <button type="submit" formmethod="post" class="w-100 btn btn-lg btn-primary" asp-area="Identity" asp-controller="DesignerProduct" asp-action="DeleteProductPost" asp-route-productId="@Model.ProductId">Delete!</button>
         </form>
     </div>
 </div>

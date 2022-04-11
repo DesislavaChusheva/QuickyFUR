@@ -14,10 +14,10 @@
         @if (SignInManager.Context.User.IsInRole("Designer"))
         {
             <li class="nav-item">
-                <a class="nav-link text-dark" asp-area="Identity" asp-controller="Designer" asp-action="CreateProduct">Create Product</a>
+                <a class="nav-link text-dark" asp-area="Identity" asp-controller="DesignerProduct" asp-action="CreateProduct">Create Product</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link text-dark" asp-area="Identity" asp-controller="Designer" asp-action="MyProducts">My Products</a>
+                <a class="nav-link text-dark" asp-area="Identity" asp-controller="DesignerProduct" asp-action="MyProducts">My Products</a>
             </li>
             <li class="nav-item">
                 <a class="nav-link text-dark" asp-area="Identity" asp-controller="Order" asp-action="Orders">Orders</a>
@@ -26,10 +26,10 @@
         else
         {
             <li class="nav-item">
-                <a class="nav-link text-dark" asp-area="Identity" asp-controller="Customer" asp-action="Categories">Categories</a>
+                <a class="nav-link text-dark" asp-area="Identity" asp-controller="CustomerProduct" asp-action="Categories">Categories</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link text-dark" asp-area="Identity" asp-controller="Customer" asp-action="Cart">Cart</a>
+                <a class="nav-link text-dark" asp-area="Identity" asp-controller="CustomerProduct" asp-action="Cart">Cart</a>
             </li>
               <li class="nav-item">
                 <a class="nav-link text-dark" asp-area="Identity" asp-controller="Order" asp-action="MyOrders">MyOrders</a>

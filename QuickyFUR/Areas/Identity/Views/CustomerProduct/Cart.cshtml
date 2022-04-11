@@ -39,12 +39,12 @@ else
                 <p>@p.Price</p>
             </div>
         </div>
-        <a asp-area="Identity" asp-controller="Customer" asp-action="RemoveProductFromCart" asp-route-productId="@p.ProductId">Remove</a>
+        <a asp-area="Identity" asp-controller="CustomerProduct" asp-action="RemoveProductFromCart" asp-route-productId="@p.ProductId">Remove</a>
         <br>
         <br>
         <br>
     }
     <b>Total price: @Model.TotalPrice $</b>
-    <a asp-area="Identity" asp-controller="Customer" asp-action="BuyProducts" asp-route-cartId="@Model.CartId">Buy</a>
+    <a asp-area="Identity" asp-controller="CustomerProduct" asp-action="BuyProducts" asp-route-cartId="@Model.CartId">Buy</a>
 }
 

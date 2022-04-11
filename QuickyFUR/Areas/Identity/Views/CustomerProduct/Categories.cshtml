@@ -14,7 +14,7 @@
 <h1>Products</h1>
 
 
-<form id="categoriesForm" name="Categories" method="post" asp-area="Identity" asp-controller="Customer" asp-action="Categories">
+<form id="categoriesForm" name="Categories" method="post" asp-area="Identity" asp-controller="CustomerProduct" asp-action="Categories">
     <div class="form-group">
         <label>Select</label>
         <select name="Category" class="form-control">
@@ -61,7 +61,7 @@ else
                 <p>@m.Descritpion</p>
             </div>
             <a href="@m.ConfiguratorLink" target="_blank">Configurator</a>
-            <a asp-area="Identity" asp-controller="Customer" asp-action="OrderProduct" asp-route-productId="@m.ProdcuctId">Order</a>
+            <a asp-area="Identity" asp-controller="CustomerProduct" asp-action="OrderProduct" asp-route-productId="@m.ProdcuctId">Order</a>
         </div>
     }
 }

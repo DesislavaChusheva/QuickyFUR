@@ -27,10 +27,10 @@
         <p>@Model.Descritpion</p>
     </div>
     <a href="@Model.ConfiguratorLink" target="_blank">Configurator</a>
-    <a asp-area="Identity" asp-controller="Customer" asp-action="MoreAboutDesigner" asp-route-productId="@Model.ProductId">More about @Model.DesignerName</a>
+    <a asp-area="Identity" asp-controller="CustomerProduct" asp-action="MoreAboutDesigner" asp-route-productId="@Model.ProductId">More about @Model.DesignerName</a>
 
 
-    <form method="post" enctype="multipart/form-data" asp-area="Identity" asp-controller="Customer" asp-action="AddToCart" asp-route-productId="@Model.ProductId">
+    <form method="post" enctype="multipart/form-data" asp-area="Identity" asp-controller="CustomerProduct" asp-action="AddToCart" asp-route-productId="@Model.ProductId">
         <input type="file" name="jsonFile">
         <button type="submit" value="Upload">AddToCart</button>
     </form>
