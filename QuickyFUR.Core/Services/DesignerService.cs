@@ -105,6 +105,55 @@ namespace QuickyFUR.Core.Services
                         .First();
         }
 
+        public async Task<List<OrderPageViewModel>> GetOrders(string userId)
+        {
+            var allOrders = _repo.All<ConfiguratedProduct>()
+                                 .Where(p => p.Designer.ApplicationUser.Id == userId && p.Sold == true)
+                                 .ToList();
+
+            var cartsIds = allOrders.Select(o => o.CartId)
+                                        .ToList()
+                                        .Distinct();
+
+            var customersIds = _repo.All<Customer>()
+                                    .Where(c => cartsIds.Contains(c.CartId))
+                                    .Select(c => c.Id)
+                                    .ToList();
+
+
+            List<OrderPageViewModel> finalOrders = new List<OrderPageViewModel>();
+
+            foreach (var customerId in customersIds)
+            {
+                var customer = _repo.All<Customer>()
+                                    .Where(c => c.Id == customerId)
+                                    .Select(d => d.ApplicationUser.FullName)
+                                    .First()
+                                    .ToString();
+
+                var products = _repo.All<ConfiguratedProduct>()
+                                    .Where(p => p.Designer.ApplicationUser.Id == userId && p.Cart.Customer.Id == customerId && p.Sold == true)
+                                    .Select(p => new OrderedProductsViewModel()
+                                    {
+                                        Name = p.Name,
+                                        Dimensions = p.Dimensions,
+                                        Additions = p.Additions,
+                                        Materials = p.Materials,
+                                        Price = p.Price
+                                    }).ToList();
+
+                var orders =  new OrderPageViewModel()
+                                 {
+                                     DorCSide = customer,
+                                     Products = products
+                                 };
+
+                finalOrders.Add(orders);
+            }
+
+            return finalOrders.ToList();
+        }
+
         public async Task<DeleteProductViewModel> GetProductForDeleteAsync(int productId)
         {
             var product = _repo.All<Product>()
@@ -127,9 +176,9 @@ namespace QuickyFUR.Core.Services
                                    ProductId = productId,
                                    Name = p.Name,
                                    Category = p.Category.Name,
-                                   ImageLink= p.ImageLink,
-                                   Descritpion= p.Descritpion,
-                                   ConfiguratorLink= p.ConfiguratorLink
+                                   ImageLink = p.ImageLink,
+                                   Descritpion = p.Descritpion,
+                                   ConfiguratorLink = p.ConfiguratorLink
                                })
                                .First();
             return product;

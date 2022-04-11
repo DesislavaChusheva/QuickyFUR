@@ -4,7 +4,6 @@ using QuickyFUR.Infrastructure.Data.Models;
 using QuickyFUR.Infrastructure.Data.Repositories;
 using Newtonsoft.Json;
 
-
 namespace QuickyFUR.Core.Services
 {
     public class CustomerService : ICustomerService
@@ -266,6 +265,49 @@ namespace QuickyFUR.Core.Services
             customer.Address = model.Address;
             await _repo.SaveChangesAsync();
             return true;
+        }
+
+        public async Task<List<OrderPageViewModel>> GetOrders(string userId)
+        {
+            var allOrders = _repo.All<ConfiguratedProduct>()
+                                 .Where(p => p.Cart.Customer.ApplicationUser.Id == userId && p.Sold == true)
+                                 .ToList();
+
+            var designersIds = allOrders.Select(o => o.DesignerId)
+                                        .ToList()
+                                        .Distinct();
+
+            List<OrderPageViewModel> finalOrders = new List<OrderPageViewModel>();
+
+            foreach (var designerId in designersIds)
+            {
+                var designer = _repo.All<Designer>()
+                                    .Where(d => d.Id == designerId)
+                                    .Select(d => d.ApplicationUser.FullName)
+                                    .First()
+                                    .ToString();
+
+                var products = _repo.All<ConfiguratedProduct>()
+                                    .Where(p => p.Cart.Customer.ApplicationUser.Id == userId && p.DesignerId == designerId && p.Sold == true)
+                                    .Select(p => new OrderedProductsViewModel()
+                                    {
+                                        Name = p.Name,
+                                        Dimensions = p.Dimensions,
+                                        Additions = p.Additions,
+                                        Materials = p.Materials,
+                                        Price = p.Price
+                                    }).ToList();
+
+                var orders = new OrderPageViewModel()
+                                 {
+                                     DorCSide = designer,
+                                     Products = products
+                                 };
+
+                finalOrders.Add(orders);
+            }
+
+            return finalOrders.ToList();
         }
     }
 }

@@ -17,7 +17,7 @@ namespace QuickyFUR.Infrastructure.Data
         {
             base.OnConfiguring(optionsBuilder);
 
-            optionsBuilder.UseSqlServer(@"Server=.;Database=QuickyFUR;Trusted_Connection=True");
+            optionsBuilder.UseSqlServer(@"Server=.;Database=QuickyFUR;Trusted_Connection=True;");
         }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

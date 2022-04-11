@@ -23,5 +23,6 @@ namespace QuickyFUR.Core.Contracts
         Task<bool> RemoveProductAsync(int productId);
         Task<EditCustomerProfileViewModel> GetCustomerAsync(string userId);
         Task<bool> EditCustomerProfile(EditCustomerProfileViewModel model, string userId);
+        Task<List<OrderPageViewModel>> GetOrders(string userId);
     }
 }
