@@ -68,7 +68,7 @@ namespace QuickyFUR.Core.Services
             return true;
         }
 
-        public async Task<bool> EditDesignerProfile(EditDesignerProfileViewModel model, string userId)
+        public async Task<bool> EditDesignerProfileAsync(EditDesignerProfileViewModel model, string userId)
         {
             if (model == null)
             {
@@ -142,7 +142,7 @@ namespace QuickyFUR.Core.Services
             return designer;
         }
 
-        public async Task<List<OrderPageViewModel>> GetOrders(string userId)
+        public async Task<List<OrderPageViewModel>> GetOrdersAsync(string userId)
         {
             var allOrders = _repo.All<ConfiguratedProduct>()
                                  .Where(p => p.Designer.ApplicationUser.Id == userId && p.Sold == true)

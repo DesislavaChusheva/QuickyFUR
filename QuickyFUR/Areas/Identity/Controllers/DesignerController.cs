@@ -45,7 +45,7 @@ namespace QuickyFUR.Areas.Identity.Controllers
             var user = await _userManager.GetUserAsync(User);
             var userId = await _userManager.GetUserIdAsync(user);
 
-            await _designerService.EditDesignerProfile(model, userId);
+            await _designerService.EditDesignerProfileAsync(model, userId);
             return Redirect("/Identity/Account/Manage");
         }
     }

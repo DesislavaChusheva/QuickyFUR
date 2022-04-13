@@ -36,7 +36,7 @@ namespace QuickyFUR.Areas.Identity.Controllers
             var user = await _userManager.GetUserAsync(User);
             var userId = await _userManager.GetUserIdAsync(user);
 
-            var orders = await _designerService.GetOrders(userId);
+            var orders = await _designerService.GetOrdersAsync(userId);
 
             return View(orders);
         }
