@@ -49,7 +49,12 @@ namespace QuickyFUR.Core.Services
                             .Where(c => c.Customer.ApplicationUser.Id == userId)
                             .First();
 
-            if (cart.Products.Count == 0)
+            var count = _repo.All<ConfiguratedProduct>()
+                             .Where(p => p.Cart.Customer.ApplicationUser.Id == userId && p.Sold == false && p.Removed == false)
+                             .ToList()
+                             .Count();
+            
+            if (count == 0)
             {
                 return null;
             }
@@ -76,6 +81,7 @@ namespace QuickyFUR.Core.Services
                 Products = products.ToList(),
                 TotalPrice = totalPrice
             };
+       
         }
 
         public async Task<OrderProductViewModel> GetProductForOrderAsync(int productId)
@@ -167,6 +173,10 @@ namespace QuickyFUR.Core.Services
             }
 
             configuratedProduct.CartId = customerCartId;
+            Cart cartC = _repo.All<Cart>()
+                             .Where(c => c.Id == customerCartId)
+                             .First();
+            cartC.Products.Add(configuratedProduct);
 
             await _repo.AddAsync(configuratedProduct);
 
