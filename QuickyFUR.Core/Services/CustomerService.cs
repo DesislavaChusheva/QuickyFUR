@@ -48,7 +48,12 @@ namespace QuickyFUR.Core.Services
             var cart = _repo.All<Cart>()
                             .Where(c => c.Customer.ApplicationUser.Id == userId)
                             .First();
-            
+
+            if (cart.Products.Count == 0)
+            {
+                return null;
+            }
+
             var products = _repo.All<ConfiguratedProduct>()
                                 .Where(p => p.Cart.Customer.ApplicationUser.Id == userId && p.Sold == false && p.Removed == false)
                                 .Select(p => new ProductsInCartViewModel()
@@ -112,13 +117,13 @@ namespace QuickyFUR.Core.Services
 
             if (configuratedProductAddedInformation == null)
             {
-                return false;
+                throw new ArgumentException(ErrorMessages.emptyParameter);
             }
 
             bool priceParsed = Decimal.TryParse(configuratedProductAddedInformation.Price, out decimal price);
             if (!priceParsed)
             {
-                return false;
+                throw new ArgumentException(ErrorMessages.emptyParameter);
             }
 
 
@@ -237,6 +242,11 @@ namespace QuickyFUR.Core.Services
 
         public IEnumerable<AllProductsByDesignerViewModel> GetProductsForThisDesignerAsync(string designerId)
         {
+            if (designerId == null)
+            {
+                throw new ArgumentException(ErrorMessages.emptyParameter);
+            }
+            
             var products = _repo.All<Product>()
                                 .Where(p => p.DesignerId == designerId && p.Deleted == false)
                                 .Select(p => new AllProductsByDesignerViewModel()

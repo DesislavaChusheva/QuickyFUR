@@ -148,6 +148,11 @@ namespace QuickyFUR.Core.Services
                                  .Where(p => p.Designer.ApplicationUser.Id == userId && p.Sold == true)
                                  .ToList();
 
+            if (allOrders == null)
+            {
+                return null;
+            }
+
             var cartsIds = allOrders.Select(o => o.CartId)
                                         .ToList()
                                         .Distinct();
