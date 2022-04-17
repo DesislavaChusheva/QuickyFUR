@@ -53,7 +53,7 @@ namespace QuickyFUR.Core.Services
                              .Where(p => p.Cart.Customer.ApplicationUser.Id == userId && p.Sold == false && p.Removed == false)
                              .ToList()
                              .Count();
-            
+
             if (count == 0)
             {
                 return null;
@@ -133,20 +133,6 @@ namespace QuickyFUR.Core.Services
             }
 
 
-            var configuratedProduct = new ConfiguratedProduct()
-            {
-                Name = productForConfiguration.Name,
-                CategoryId = productForConfiguration.CategoryId,
-                ImageLink = productForConfiguration.ImageLink,
-                DesignerId = productForConfiguration.DesignerId,
-                Descritpion = productForConfiguration.Descritpion,
-                Dimensions = configuratedProductAddedInformation.Dimensions,
-                Additions = configuratedProductAddedInformation.Additions,
-                Materials = configuratedProductAddedInformation.Materials,
-                Price = price
-            };
-
-
             Customer customer = _repo.All<Customer>()
                                      .Where(c => c.ApplicationUser.Id == userId)
                                      .First();
@@ -157,27 +143,36 @@ namespace QuickyFUR.Core.Services
             }
 
             string? customerCartId = customer.CartId;
-
+            
             if (customerCartId == null)
             {
                 Cart cart = new Cart();
-
+                
                 cart = new Cart()
                 {
                     Customer = customer
                 };
-
+                
                 customerCartId = cart.Id;
-
+                
                 await _repo.AddAsync(cart);
             }
 
-            configuratedProduct.CartId = customerCartId;
-            Cart cartC = _repo.All<Cart>()
-                             .Where(c => c.Id == customerCartId)
-                             .First();
-            cartC.Products.Add(configuratedProduct);
+            var configuratedProduct = new ConfiguratedProduct()
+            {
+                Name = productForConfiguration.Name,
+                CategoryId = productForConfiguration.CategoryId,
+                ImageLink = productForConfiguration.ImageLink,
+                DesignerId = productForConfiguration.DesignerId,
+                CartId = customerCartId,
+                Descritpion = productForConfiguration.Descritpion,
+                Dimensions = configuratedProductAddedInformation.Dimensions,
+                Additions = configuratedProductAddedInformation.Additions,
+                Materials = configuratedProductAddedInformation.Materials,
+                Price = price
+            };
 
+            
             await _repo.AddAsync(configuratedProduct);
 
             await _repo.SaveChangesAsync();

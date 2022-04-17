@@ -314,7 +314,15 @@ namespace QuickyFUR.Test
             Assert.DoesNotThrowAsync(async () => await service.EditCustomerProfile(model, userId));
         }
 
+        [Test]
+        public void GetOrdersReturns()
+        {
+            string userId = "e60961e7-6473-4c9b-bacf-00196946c824";
 
+            var service = _serviceProvider.GetService<ICustomerService>();
+
+            Assert.DoesNotThrow(() => service.GetOrders(userId));
+        }
 
         [TearDown]
         public void TearDown()
